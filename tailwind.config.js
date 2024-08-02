@@ -4,6 +4,7 @@ module.exports = {
     "./src/**/*.{html, ts}",
     "./node_modules/flowbite/**/*.js"
   ],
+ 
   theme: {
     screens: {
       'sm': '640px',
@@ -32,6 +33,9 @@ module.exports = {
         'gray_': '#F0F0F0',
 
 
+      },
+      fontFamily: {
+        sans: ['Public Sans', 'sans-serif'],
       },
       fontWeight: {
         'amy-extra-bold': 900
