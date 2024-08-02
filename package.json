@@ -23,6 +23,7 @@
     "@angular/ssr": "^17.2.1",
     "express": "^4.18.2",
     "flowbite": "^2.4.1",
+    "notiflix": "^3.2.7",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
