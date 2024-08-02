@@ -8,29 +8,29 @@ import { DashboardComponent } from './Components/dashboard/dashboard.component';
 import { LoginComponent } from './Components/login/login.component';
 
 export const routes: Routes = [
-  { path: '', component: LoginComponent },
+  // { path: '', component: LoginComponent },
 
+  // path: 'home',
+  // component: DashboardComponent,
+  // children: [
   {
     path: 'home',
     component: DashboardComponent,
-    // canActivate: [AuthGuard],
-    children: [
-      {
-        path: 'users',
-        component: UsersComponent,
-      },
-      {
-        path: 'reports',
-        component: ReportsComponent,
-      },
-      {
-        path: 'trips',
-        component: TripsComponent,
-      },
-      {
-        path: 'settings',
-        component: SettingsComponent,
-      },
-    ],
+  },
+  {
+    path: 'users',
+    component: UsersComponent,
+  },
+  {
+    path: 'reports',
+    component: ReportsComponent,
+  },
+  {
+    path: 'trips',
+    component: TripsComponent,
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent,
   },
 ];
