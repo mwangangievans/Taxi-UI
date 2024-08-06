@@ -53,9 +53,4 @@ export class LoginComponent {
       },
     });
   }
-
-  logout() {
-    this.sessionService.logout();
-    this.router.navigate(['/login']);
-  }
 }

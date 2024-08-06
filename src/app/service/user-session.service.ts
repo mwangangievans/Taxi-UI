@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserSession } from '../model';
+import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +13,7 @@ export class UserSessionService {
   private sessionSubject: BehaviorSubject<UserSession | null>;
   public session$: Observable<UserSession | null>;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     const savedSession = localStorage.getItem(this.SESSION_KEY);
     this.sessionSubject = new BehaviorSubject<UserSession | null>(
       savedSession ? JSON.parse(savedSession) : null
@@ -51,6 +53,7 @@ export class UserSessionService {
 
   public logout(): void {
     this.clearSession();
+    this.router.navigate(['/login']);
   }
 
   public refreshToken(): Observable<any> {
@@ -79,3 +82,4 @@ export class UserSessionService {
     }
   }
 }
+//ng generate interceptor service/Auth
