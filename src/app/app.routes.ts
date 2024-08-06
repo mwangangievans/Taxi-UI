@@ -8,29 +8,22 @@ import { DashboardComponent } from './Components/dashboard/dashboard.component';
 import { LoginComponent } from './Components/login/login.component';
 
 export const routes: Routes = [
-  // { path: '', component: LoginComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
 
-  // path: 'home',
-  // component: DashboardComponent,
-  // children: [
+  {
+    path: 'login',
+    component: LoginComponent,
+  },
   {
     path: 'home',
-    component: DashboardComponent,
-  },
-  {
-    path: 'users',
-    component: UsersComponent,
-  },
-  {
-    path: 'reports',
-    component: ReportsComponent,
-  },
-  {
-    path: 'trips',
-    component: TripsComponent,
-  },
-  {
-    path: 'settings',
-    component: SettingsComponent,
+    component: HomeComponent,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent }, // Changed to HomeComponent to reflect a likely correct routing scenario
+      { path: 'users', component: UsersComponent },
+      { path: 'reports', component: ReportsComponent },
+      { path: 'trips', component: TripsComponent },
+      { path: 'settings', component: SettingsComponent },
+    ],
   },
 ];

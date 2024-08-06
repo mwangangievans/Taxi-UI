@@ -1,30 +1,30 @@
-<!-- <div class="min-h-screen bg-white_ flex flex-col justify-center sm:py-12">
+<div class="min-h-screen bg-white_ flex flex-col justify-center sm:py-12">
     <div class="p-10 xs:p-0 mx-auto md:w-full md:max-w-md ">
         <img src="../../../assets/uber-bg-preview.png" class="logo" alt="">
 
-        <div class="mb-4">
+        <form class="mb-4" [formGroup]="loginForm" (ngSubmit)="login()">
             <div class="mt-4 mb-2 floating-label-wrapper">
-                <input type="text" id="password" placeholder=" " required
+                <input type="text" formControlName="email" placeholder=" " required
                     class="input bg-gray-50 border border-border-green_ text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full py-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" />
                 <label for="password" class="floating-label text-sm ml-2 font-medium text-gray-900 dark:text-white">
                     Email
                 </label>
             </div>
             <div class="mt-12 mb-2 floating-label-wrapper">
-                <input type="text" id="password" placeholder=" " required
+                <input type="password" formControlName="password" placeholder=" " required
                     class="input bg-gray-50 border border-green_ text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full py-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" />
                 <label for="password" class="floating-label text-sm ml-2 font-medium text-gray-900 dark:text-white">
                     Password
                 </label>
             </div>
             <div class="mt-12 w-full flex justify-center">
-                <button type="button"
+                <button type="submit"
                     class="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 w-full font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
                     Login
                 </button>
 
             </div>
-        </div>
+        </form>
         <div class="">
             <div class="flex float-right">
                 <div class="text-center sm:text-left whitespace-nowrap">
@@ -34,4 +34,4 @@
             </div>
         </div>
     </div>
-</div> -->
+</div>
