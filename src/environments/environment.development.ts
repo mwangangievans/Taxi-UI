@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://sisibo.uasingishu.go.ke/api/v1/',
+  apiUrl: 'http://46.101.104.128:7823/api/',
 };

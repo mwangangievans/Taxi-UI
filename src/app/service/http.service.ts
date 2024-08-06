@@ -19,7 +19,7 @@ export class HttpService {
     this.userToken = await this.storageService.getItem('userToken');
   }
 
-  post_req(serviceName: string, data: any) {
+  post(serviceName: string, data: any) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
@@ -33,7 +33,7 @@ export class HttpService {
     return this.http.post(url, JSON.stringify(data), options);
   }
 
-  put_req(serviceName: string, data: any) {
+  put(serviceName: string, data: any) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
@@ -44,7 +44,7 @@ export class HttpService {
     return this.http.put(url, JSON.stringify(data), options);
   }
 
-  get_req(serviceName: string) {
+  get(serviceName: string) {
     this.getUserToken();
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export class HttpService {
     return this.http.get(url, options);
   }
 
-  del_req(serviceName: string) {
+  delete(serviceName: string) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });

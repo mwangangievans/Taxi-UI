@@ -26,7 +26,7 @@ module.exports = {
       
       colors: {
         'green_': '#017873',
-        'green_lighter': '#DEEDED',
+        'green_lighter': '#50A29E',
         'yellow_': '#FBBE4B',
         'yellow_lighter': '#F2EADB',
         'white_': '#FFFFFF',
