@@ -1,4 +1,71 @@
 <div class="h-[80vh]">
-    <p>dashboard works!</p>
+    <div class="grid grid-cols-4 gap-12 ">
+        <div class="max-w-sm  p-6 bg-white border-2 border-green_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans"
+            *ngFor="let stat of statistics">
+            <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">{{ stat.value }}</h5>
+            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ stat.title }}</p>
+        </div>
+
+    </div>
+    <div class="my-12 w-full h-1/2 bg-white _radius py-6">
+        <div class=" !flex justify-between hidden mx-12   md:block md:w-auto " id="navbar-dropdown">
+            <div>
+                <ul
+                    class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-green_lighter rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                    <li>
+                        <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar"
+                            class="flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded hover:bg-green_lighter font-bold md:hover:bg-transparent md:border-0 public-sans md:hover:text-green_ md:p-0 md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent">Earnings
+                            <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 1 4 4 4-4" />
+                            </svg></button>
+                        <!-- Dropdown menu -->
+                        <div id="dropdownNavbar"
+                            class="z-10 hidden font-normal bg-white divide-y divide-green_lighter rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-400"
+                                aria-labelledby="dropdownLargeButton">
+                                <li>
+                                    <a
+                                        class="block px-4 py-2 hover:bg-green_lighter dark:hover:bg-gray-600 hover:text-white">Driver</a>
+                                </li>
+                                <li>
+                                    <a
+                                        class="block px-4 py-2 hover:bg-green_lighter dark:hover:bg-gray-600 hover:text-white">Passagers</a>
+                                </li>
+                                <li>
+                                    <a
+                                        class="block px-4 py-2 hover:bg-green_lighter dark:hover:bg-gray-600 hover:text-white">Trips</a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </li>
+
+
+                </ul>
+            </div>
+
+            <div class="">
+                <div class="rounded-lg border border-gray-300 bg-green_ px-2">
+                    <nav class="flex flex-wrap gap-4">
+                        <a *ngFor="let stat of filters; let i = index" (click)="updateFilter(i)"
+                            class="whitespace-nowrap cursor-pointer inline-flex rounded-lg py-1 px-3 text-sm text-white_ font-medium transition-all duration-200 ease-in-out"
+                            [ngClass]="{
+                             'text-gray-600 hover:bg-white_ hover:text-gray-900': !stat.active,
+                             'bg-white_ !text-green_': stat.active
+                           }">
+                            {{ stat.title }}
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+        <canvas id="canvas"></canvas>
+
+    </div>
+    <!-- <app-users></app-users> -->
+
 
 </div>

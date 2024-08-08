@@ -27,10 +27,13 @@ module.exports = {
       colors: {
         'green_': '#017873',
         'green_lighter': '#50A29E',
+        'green_lighter_2': '#DEEDED',
         'yellow_': '#FBBE4B',
         'yellow_lighter': '#F2EADB',
         'white_': '#FFFFFF',
         'gray_': '#F0F0F0',
+        'text_gray': '#B2BEBE',
+
 
 
       },
