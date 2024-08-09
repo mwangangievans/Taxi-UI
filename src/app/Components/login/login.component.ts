@@ -40,12 +40,14 @@ export class LoginComponent {
     if (this.loginForm.invalid) {
       return;
     }
-    this.api.post('auth/login', this.loginForm.value).subscribe({
+    this.api.postWithNoToken('auth/login', this.loginForm.value).subscribe({
       next: (res) => {
         this.sessionService.storeUserDataAfterLoginSuccess(res);
         this.router.navigate(['home']);
       },
       error: (err) => {
+        console.log(err);
+
         this.notify.showError(`${err.error.message}`, 'error');
       },
       complete: () => {
