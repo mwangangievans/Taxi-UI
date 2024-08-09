@@ -30,6 +30,8 @@ export class HttpService {
     return new HttpHeaders({
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin':
+        'https://taxi-ui-mwangangievans-projects.vercel.app/#/',
       Authorization: `Bearer ${
         this._UserSessionService.getSession()?.accessToken
       }`,

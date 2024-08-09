@@ -1,6 +1,6 @@
-<div class="h-[80vh]">
+<div class="overflow-auto h-[80vh] scrollbar-hide">
     <div class="grid grid-cols-4 gap-12 ">
-        <div class="max-w-sm  p-6 bg-white border-2 border-green_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans"
+        <div class="max-w-sm  p-4 bg-white border-2 border-green_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans"
             *ngFor="let stat of statistics">
             <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">{{ stat.value }}</h5>
             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ stat.title }}</p>
@@ -65,7 +65,10 @@
         <canvas id="canvas"></canvas>
 
     </div>
-    <!-- <app-users></app-users> -->
+    <div class="">
+
+        <app-users></app-users>
+    </div>
 
 
 </div>
