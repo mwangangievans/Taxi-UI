@@ -51,7 +51,7 @@
         <div class="">
             <div class=" border-b-2 border-gray_    px-2">
                 <nav class="flex flex-wrap gap-4">
-                    <a *ngFor="let stat of filters; let i = index" (click)="updateFilter(i)"
+                    <a *ngFor="let stat of filters; let i = index" (click)="updateFilter(i,stat.name)"
                         class="whitespace-nowrap cursor-pointer inline-flex  py-1 px-3 text-sm text-gray font-medium transition-all duration-200 ease-in-out"
                         [ngClass]="{
                          'text-gray-600 hover:bg-white_ hover:text-gray-900': !stat.active,
@@ -66,30 +66,30 @@
     <!-- ================================table=============================== -->
 
 
-    <div class="relative overflow-x-auto  sm:rounded-lg my-12">
+    <div *ngIf="allUsers.length" class="relative overflow-x-auto  sm:rounded-lg my-12">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    <th scope="col" class="px-6 py-3">Date</th>
+                    <th scope="col" class="px-6 py-3">#</th>
                     <th scope="col" class="px-6 py-3">Name</th>
-                    <th scope="col" class="px-6 py-3">ID</th>
-                    <th scope="col" class="px-6 py-3">Number Plate</th>
-                    <th scope="col" class="px-6 py-3">Documents</th>
-                    <th scope="col" class="px-6 py-3">Status</th>
+                    <th scope="col" class="px-6 py-3">ROLE</th>
+                    <th scope="col" class="px-6 py-3">EMAIL</th>
+                    <th scope="col" class="px-6 py-3">PHONE NUMBER</th>
                     <th scope="col" class="px-6 py-3">More</th>
+                    <!-- <th scope="col" class="px-6 py-3">Status</th> -->
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let row of tableData"
+                <tr *ngFor="let row of allUsers"
                     [ngClass]="{'odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700': true}">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {{ row.date }}
+                        {{ row.userId }}
                     </th>
                     <td class="px-6 py-4">{{ row.name }}</td>
-                    <td class="px-6 py-4">{{ row.id }}</td>
-                    <td class="px-6 py-4">{{ row.numberPlate }}</td>
-                    <td class="px-6 py-4">{{ row.documents }}</td>
-                    <td class="px-6 py-4 flex">
+                    <td class="px-6 py-4">{{ row.roles }}</td>
+                    <td class="px-6 py-4">{{ row.email }}</td>
+                    <td class="px-6 py-4">{{ row.userProfile?.phoneNumber }}</td>
+                    <!-- <td class="px-6 py-4 flex">
                         <button *ngIf="row.status === 'Pending'" type="button"
                             class="flex items-center text-white bg-yellow_ hover:bg-yellow_ focus:ring-0 focus:ring-none font-medium _radius text-sm px-6 py-1 me-2 mb-2">
                             <svg class="w-6 h-6 text-gray-800 me-2" aria-hidden="true"
@@ -109,14 +109,21 @@
                             </svg>
                             Approved
                         </button>
-                    </td>
+                    </td> -->
                     <td class="px-6 py-4">
-                        <a class="font-medium text-gray-700 dark:text-gray-300 cursor-pointer">View</a>
+                        <a [routerLink]="row.userId.toString()"
+                            class="font-medium text-gray-700 dark:text-gray-300 cursor-pointer">View</a>
                     </td>
+
+
                 </tr>
             </tbody>
         </table>
     </div>
 
+    <div *ngIf="!allUsers.length "
+        class="relative overflow-x-auto sm:rounded-lg flex justify-center items-center h-1/2">
+        <p class="text-center text-3xl">no records available</p>
+    </div>
 
 </div>

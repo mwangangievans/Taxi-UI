@@ -30,8 +30,6 @@ export class HttpService {
     return new HttpHeaders({
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin':
-        'https://taxi-ui-mwangangievans-projects.vercel.app/#/',
       Authorization: `Bearer ${
         this._UserSessionService.getSession()?.accessToken
       }`,
@@ -47,9 +45,11 @@ export class HttpService {
   }
 
   get(route: string): Observable<any> {
-    return this.http.get<any>(`${baseUrl}${route}`, {
-      headers: this.SetHeaders(),
-    });
+    return this.http
+      .get<any>(`${baseUrl}${route}`, {
+        headers: this.SetHeaders(),
+      })
+      .pipe();
   }
   getWithNoToken(route: string): Observable<any> {
     return this.http.get<any>(`${baseUrl}${route}`);

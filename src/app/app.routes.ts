@@ -6,6 +6,7 @@ import { TripsComponent } from './Components/trips/trips.component';
 import { SettingsComponent } from './Components/settings/settings.component';
 import { DashboardComponent } from './Components/dashboard/dashboard.component';
 import { LoginComponent } from './Components/login/login.component';
+import { UsersDetailComponent } from './Components/users-detail/users-detail.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -24,6 +25,7 @@ export const routes: Routes = [
       { path: 'reports', component: ReportsComponent },
       { path: 'trips', component: TripsComponent },
       { path: 'settings', component: SettingsComponent },
+      { path: 'users/:id', component: UsersDetailComponent },
     ],
   },
 ];

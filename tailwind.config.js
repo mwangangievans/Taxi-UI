@@ -28,11 +28,14 @@ module.exports = {
         'green_': '#017873',
         'green_lighter': '#50A29E',
         'green_lighter_2': '#DEEDED',
+        'green_lighter_3': '#EBF9F1',
         'yellow_': '#FBBE4B',
         'yellow_lighter': '#F2EADB',
         'white_': '#FFFFFF',
         'gray_': '#F0F0F0',
         'text_gray': '#B2BEBE',
+        'danger_': '#A30D11',
+
 
 
 
