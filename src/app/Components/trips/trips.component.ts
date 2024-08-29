@@ -70,7 +70,6 @@ export class TripsComponent {
     try {
       // Parse the JSON string into an object
       const geoData = JSON.parse(startPointReverseGeoCoordinatesResponse);
-      console.log({ geoData });
       this.display_name = geoData.display_name;
 
       // Access and return the name property

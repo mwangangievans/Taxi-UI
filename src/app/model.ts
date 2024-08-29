@@ -46,3 +46,20 @@ export interface userInterface {
     hasUploadedCustomerKycDocuments: boolean;
   };
 }
+
+export interface configurationInterface {
+  configurationType: string;
+  percentageValue: number;
+}
+
+export interface Statistics {
+  totalEarnings: number;
+  totalTrips: number;
+  totalTransportedPassengers: number;
+  totalDrivers: number;
+}
+
+export interface graphData {
+  dateKey: string; // The date in string format, e.g., "2024-08-21"
+  totalAmount: number; // The total amount associated with this date
+}

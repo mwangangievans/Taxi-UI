@@ -42,13 +42,15 @@ export class LoginComponent {
     }
     this.api.postWithNoToken('auth/login', this.loginForm.value).subscribe({
       next: (res) => {
+        console.log('this is res...', res);
+
         this.sessionService.storeUserDataAfterLoginSuccess(res);
         this.router.navigate(['home']);
       },
       error: (err) => {
-        console.log(err);
+        console.log('this is erro....', err);
 
-        this.notify.showError(`${err.error.message}`, 'error');
+        this.notify.showError(`${err.message}`, 'error');
       },
       complete: () => {
         console.log('Login request completed');

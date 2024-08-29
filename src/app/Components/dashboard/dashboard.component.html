@@ -1,10 +1,31 @@
 <div class="overflow-auto h-[80vh] scrollbar-hide">
     <div class="grid grid-cols-4 gap-12 ">
-        <div class="max-w-sm  p-4 bg-white border-2 border-green_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans"
-            *ngFor="let stat of statistics">
-            <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">{{ stat.value }}</h5>
-            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ stat.title }}</p>
+        <div
+            class="max-w-sm  p-4 bg-white border-2 border-green_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans">
+            <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Total earnings</h5>
+            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{handleNullValue(statistics.totalEarnings) }}
+            </p>
         </div>
+        <div
+            class="max-w-sm  p-4 bg-white border-2 border-green_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans">
+            <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Drivers</h5>
+            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{handleNullValue(statistics.totalDrivers)}}
+            </p>
+        </div>
+
+        <div
+            class="max-w-sm  p-4 bg-white border-2 border-green_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans">
+            <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Passagers</h5>
+            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                {{handleNullValue(statistics.totalTransportedPassengers) }}</p>
+        </div>
+
+        <div
+            class="max-w-sm  p-4 bg-white border-2 border-green_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans">
+            <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Trips</h5>
+            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{handleNullValue(statistics.totalTrips) }}</p>
+        </div>
+
 
     </div>
     <div class="my-12 w-full h-1/2 bg-white _radius py-6">
@@ -49,7 +70,7 @@
             <div class="">
                 <div class="rounded-lg border border-gray-300 bg-green_ px-2">
                     <nav class="flex flex-wrap gap-4">
-                        <a *ngFor="let stat of filters; let i = index" (click)="updateFilter(i)"
+                        <a *ngFor="let stat of filters; let i = index" (click)="onFilterClick(stat.title)"
                             class="whitespace-nowrap cursor-pointer inline-flex rounded-lg py-1 px-3 text-sm text-white_ font-medium transition-all duration-200 ease-in-out"
                             [ngClass]="{
                              'text-gray-600 hover:bg-white_ hover:text-gray-900': !stat.active,
