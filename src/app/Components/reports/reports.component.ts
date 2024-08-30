@@ -3,6 +3,7 @@ import { UsersComponent } from '../users/users.component';
 import { NotificationService } from '../../service/notification.service';
 import { HttpService } from '../../service/http.service';
 import { CommonModule } from '@angular/common';
+import { GeoResponse, Transaction } from '../../model';
 
 @Component({
   selector: 'app-reports',
@@ -12,8 +13,12 @@ import { CommonModule } from '@angular/common';
   styleUrl: './reports.component.css',
 })
 export class ReportsComponent {
+  Transactions: Transaction[] = [];
+  totalearings: number = 0;
+  totalCommission: number = 0;
+
   ngOnInit() {
-    this.getUsers();
+    this.getTransactions();
   }
 
   statistics = [
@@ -22,73 +27,64 @@ export class ReportsComponent {
   ];
 
   constructor(private api: HttpService, private notify: NotificationService) {}
-  getUsers() {
-    this.api.get('user/admin').subscribe({
+  getTransactions() {
+    this.api.get('report/transaction').subscribe({
       next: (response) => {
-        console.log('User data retrieved:', response);
-        // You can process the response here, e.g., update the state or UI
+        this.Transactions = this.formatTransactions(response);
+        if (this.Transactions.length) {
+          this.totalearings = this.calculateTotalAmount(this.Transactions);
+          this.totalCommission = this.calculateTotalCommissions(
+            this.Transactions
+          );
+        }
+
+        console.log('Transactions', this.Transactions);
       },
-      error: (error) => {
-        console.error('Error fetching users:', error);
-        // Handle any errors here, such as showing an error message to the user
-      },
-      complete: () => {
-        console.log('Completed the request to get users.');
-        // Optional: Execute any additional code after the request completes
-      },
+      error: (error) => {},
+      complete: () => {},
     });
   }
 
   filters = [{ id: 1, title: 'Transactions', active: true }];
-  chart: any = [];
 
+  formatTransactions(transactions: any[]): Transaction[] {
+    return transactions
+      .map((transaction) => ({
+        transactionId: transaction.transactionId,
+        transactionDate: transaction.transactionDate,
+        amount: transaction.amount,
+        commissionAmount: transaction.commissionAmount,
+        startPointReverseGeoCoordinatesResponse:
+          this.parseGeoCoordinatesResponse(
+            transaction.startPointReverseGeoCoordinatesResponse
+          ),
+        destinationReverseGeoCoordinatesResponse:
+          this.parseGeoCoordinatesResponse(
+            transaction.destinationReverseGeoCoordinatesResponse
+          ),
+      }))
+      .reverse();
+  }
+  parseGeoCoordinatesResponse(response: string): string {
+    const parsedResponse: GeoResponse = JSON.parse(response);
+    return parsedResponse.name || parsedResponse.display_name;
+  }
   updateFilter(index: number) {
     this.filters = this.filters.map((filter, i) => ({
       ...filter,
       active: i === index,
     }));
   }
-
-  tableData = [
-    {
-      date: '1/07/2024',
-      name: 'John Doe',
-      id: '35907530',
-      numberPlate: 'KCE 026Y',
-      documents: 'KYC Documents',
-      status: 'Pending',
-    },
-    {
-      date: '1/07/2024',
-      name: 'John Doe',
-      id: '35907530',
-      numberPlate: 'KCE 026Y',
-      documents: 'KYC Documents',
-      status: 'Approved',
-    },
-    {
-      date: '1/07/2024',
-      name: 'John Doe',
-      id: '35907530',
-      numberPlate: 'KCE 026Y',
-      documents: 'KYC Documents',
-      status: 'Pending',
-    },
-    {
-      date: '1/07/2024',
-      name: 'John Doe',
-      id: '35907530',
-      numberPlate: 'KCE 026Y',
-      documents: 'KYC Documents',
-      status: 'Pending',
-    },
-    {
-      date: '1/07/2024',
-      name: 'John Doe',
-      id: '35907530',
-      numberPlate: 'KCE 026Y',
-      documents: 'KYC Documents',
-      status: 'Pending',
-    },
-  ];
+  calculateTotalAmount(transactions: Transaction[]): number {
+    return transactions.reduce(
+      (total, transaction) => total + transaction.amount,
+      0
+    );
+  }
+  calculateTotalCommissions(transactions: Transaction[]): number {
+    return transactions.reduce(
+      (total, transaction) => total + transaction.commissionAmount,
+      0
+    );
+  }
 }

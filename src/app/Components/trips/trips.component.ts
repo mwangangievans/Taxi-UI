@@ -24,7 +24,7 @@ export class TripsComponent {
   getTrips(filter: string) {
     this.api.get(`trip?tripCompletionStatus=${filter}`).subscribe({
       next: (response) => {
-        this.tripdata = response;
+        this.tripdata = response.reverse();
         // You can process the response here, e.g., update the state or UI
       },
       error: (error) => {
@@ -42,18 +42,6 @@ export class TripsComponent {
     { id: 1, title: 'All TRIPS', name: '', active: true },
     { id: 2, title: 'UPCOMING', name: 'UPCOMING', active: false },
     { id: 3, title: 'COMPLETED', name: 'COMPLETED', active: false },
-    {
-      id: 4,
-      title: 'Pending Payments',
-      name: 'Pending Payments',
-      active: false,
-    },
-    {
-      id: 5,
-      title: 'Completed Payments',
-      name: 'Completed Payments',
-      active: false,
-    },
   ];
   chart: any = [];
 

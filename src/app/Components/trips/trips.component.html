@@ -1,4 +1,6 @@
-<div class="h-[80vh] bg-white_ _radius">
+<!-- <div class="h-[80vh] bg-white_ _radius"> -->
+<div class="overflow-auto scrollbar-hide  h-[80vh]  bg-white_ _radius">
+
     <!-- <div class=" bg-white_ _radius"> -->
 
     <div class="w-full justify-start pt-8">
@@ -24,11 +26,10 @@
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    <th scope="col" class="px-6 py-3">#</th>
+                    <th scope="col" class="px-6 py-3">Departure Time</th>
                     <th scope="col" class="px-6 py-3">Driver</th>
                     <th scope="col" class="px-6 py-3">No of Passagers</th>
                     <th scope="col" class="px-6 py-3 ">price per seat</th>
-                    <th scope="col" class="px-6 py-3">Departure Time</th>
                     <th scope="col" class="px-6 py-3">From</th>
                     <th scope="col" class="px-6 py-3">To </th>
                     <th scope="col" class="px-6 py-3">Approval Status </th>
@@ -44,14 +45,15 @@
                 <tr *ngFor="let row of tripdata"
                     [ngClass]="{'odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700': true}">
                     <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {{ row.tripId }}
-                    </td>
-                    <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {{ row.driverName }}
-                    </td>
+                        {{ row.departureTime | date:'EEEE, MMMM d, y' }} </td>
+                    <!-- <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+
+                    </td> -->
+                    <td class="px-6 py-4 ">{{ row.driverName }}</td>
+
                     <td class="px-6 py-4 ">{{ row.numberOfSeats }}</td>
                     <td class="px-6 py-4 ">{{ row.pricePerSeat | currency: 'KSH ' : 'symbol' : '' }}</td>
-                    <td class="px-6 py-4">{{ row.departureTime | date:'EEEE, MMMM d, y' }}</td>
+                    <!-- <td class="px-6 py-4">{{ row.departureTime | date:'EEEE, MMMM d, y' }}</td> -->
                     <td>
 
 
@@ -100,9 +102,10 @@
         </table>
     </div>
 
-    <div *ngIf="!tripdata.length "
-        class="relative overflow-x-auto sm:rounded-lg flex justify-center items-center h-1/2">
-        <p class="text-center text-3xl">no records available</p>
+
+    <div *ngIf="!tripdata.length"
+        class="flex items-center justify-center text-lg bg-gray-200 font-semibold mb-4 h-full">
+        <p>No Trips Available</p>
     </div>
 
     <!-- </div> -->

@@ -37,7 +37,7 @@ module.exports = {
         'danger_': '#A30D11',
 
 
-
+        
 
       },
       fontFamily: {

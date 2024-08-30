@@ -3,7 +3,11 @@ import { UsersComponent } from '../users/users.component';
 import { HttpService } from '../../service/http.service';
 import { NotificationService } from '../../service/notification.service';
 import { CommonModule } from '@angular/common';
-import { configurationInterface, kycConfiguration } from '../../model';
+import {
+  configurationInterface,
+  kycConfiguration,
+  KycDocumentFilter,
+} from '../../model';
 
 @Component({
   selector: 'app-settings',
@@ -15,11 +19,23 @@ import { configurationInterface, kycConfiguration } from '../../model';
 export class SettingsComponent {
   kyscData!: kycConfiguration[];
   kycConfiguration!: configurationInterface[];
-  activeTab: 1 | 2 = 1;
+  activeTab: 1 | 2 | 3 = 1;
+  currentSelectedKycFilter!: KycDocumentFilter;
+  filters: KycDocumentFilter[] = [];
 
   addingKyc: boolean = false;
   ngOnInit() {
     this.getKycs('DRIVER');
+    this.filters = [
+      { id: 1, title: 'Driver KYC Documents', active: true, name: 'DRIVER' },
+      {
+        id: 2,
+        title: 'Customer KYC Documents',
+        active: false,
+        name: 'CUSTOMER',
+      },
+      { id: 3, title: 'Configurations', active: false, name: 'CONFIGURATION' },
+    ];
   }
 
   updateActiveTab(tab: any) {
@@ -46,14 +62,15 @@ export class SettingsComponent {
     });
   }
 
-  filters = [
-    { id: 1, title: 'Driver KYC Documents', active: true, name: 'DRIVER' },
-    { id: 2, title: 'Customer KYC Documents', active: false, name: 'CUSTOMER' },
-    { id: 3, title: 'Configurations', active: false, name: 'CONFIGURATION' },
-  ];
+  // filters = [
+  //   { id: 1, title: 'Driver KYC Documents', active: true, name: 'DRIVER' },
+  //   { id: 2, title: 'Customer KYC Documents', active: false, name: 'CUSTOMER' },
+  //   { id: 3, title: 'Configurations', active: false, name: 'CONFIGURATION' },
+  // ];
   chart: any = [];
 
   updateFilter(index: number, filter: string) {
+    // this.currentSelectedKycFilter = this.filterByName(filter);
     this.filters = this.filters.map((filter, i) => ({
       ...filter,
       active: i === index,
@@ -83,6 +100,9 @@ export class SettingsComponent {
       },
     });
   }
+  // filterByName(name: string): KycDocumentFilter {
+  //   return this.filters.find((filter) => filter.name === name);
+  // }
   addKyc() {}
 }
 //COMPULSORY, OPTIONAL, NO_LONGER_REQUIRED
