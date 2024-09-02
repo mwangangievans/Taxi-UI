@@ -68,7 +68,7 @@ export class DataService {
       date.setDate(today.getDate() - i);
       days.push(date);
     }
-    return days.reverse(); // To have the earliest date first
+    return days; // Returns the days in reverse order, starting from today
   }
 
   formatChartData(
@@ -80,8 +80,8 @@ export class DataService {
 
     switch (filter) {
       case 'Daily':
-        labels = this.getLast7DaysLabels();
-        earnings = data.map((item) => item.totalAmount);
+        labels = this.getLast7DaysLabels().reverse();
+        earnings = data.map((item) => item.totalAmount).reverse();
         break;
 
       case 'Weekly':
