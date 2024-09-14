@@ -28,7 +28,7 @@ export class DataService {
     });
   }
 
-  getGraphData(filter: string): Observable<graphData[]> {
+  getGraphData(filter: string): Observable<any> {
     return this.http
       .get<graphData[]>(
         `${baseUrl}report/admin/dashboard/earnings?earningGroup=${filter.toUpperCase()}`,
@@ -41,7 +41,7 @@ export class DataService {
           if (filter === 'Daily') {
             return this.processDailyData(response);
           }
-          // Assume API returns aggregated data for 'Weekly' and 'Monthly'
+
           return response;
         })
       );
@@ -85,7 +85,8 @@ export class DataService {
         break;
 
       case 'Weekly':
-        labels = this.getLast8WeeksLabels();
+        // Extract only the `range` from the returned object
+        labels = this.getLast8WeeksLabels().map((week) => week.range);
         earnings = this.aggregateWeeklyData(data);
         break;
 
@@ -121,15 +122,48 @@ export class DataService {
     }); // Reversing the array to have the earliest date first
   }
 
-  private getLast8WeeksLabels(): string[] {
+  private getLast8WeeksLabels(): { index: string; range: string }[] {
     const currentDate = new Date();
-    const weekLabels: string[] = [];
-    for (let i = 7; i >= 0; i--) {
-      const weekDate = new Date(currentDate);
-      weekDate.setDate(currentDate.getDate() - i * 7);
-      weekLabels.push(formatDate(weekDate, 'MMM d', 'en')); // e.g., Aug 22
+    const weekLabels: { index: string; range: string }[] = [];
+
+    for (let i = 0; i < 8; i++) {
+      // Create a new Date object for each week
+      const endOfWeek = new Date(currentDate);
+      endOfWeek.setDate(currentDate.getDate() - i * 7);
+
+      const startOfWeek = new Date(endOfWeek);
+      startOfWeek.setDate(endOfWeek.getDate() - 6);
+
+      // Get the ISO year and week number
+      const year = endOfWeek.getFullYear();
+      const weekNumber = this.getISOWeekNumber(endOfWeek);
+
+      // Build the index in "YYYYWW" format
+      const index = `${year}${weekNumber.toString().padStart(2, '0')}`;
+
+      // Format the date range for display
+      const range = `${formatDate(
+        startOfWeek,
+        'MMM d',
+        'en'
+      )}   to   ${formatDate(endOfWeek, 'MMM d', 'en')}`;
+
+      // Push the index and date range into the array
+      weekLabels.push({ index, range });
     }
-    return weekLabels;
+
+    return weekLabels.reverse(); // Reverse to show the earliest week first
+  }
+
+  private getISOWeekNumber(date: Date): number {
+    const tempDate = new Date(date);
+    tempDate.setHours(0, 0, 0, 0);
+    tempDate.setDate(tempDate.getDate() + 4 - (tempDate.getDay() || 7)); // Adjust to the nearest Thursday
+    const yearStart = new Date(tempDate.getFullYear(), 0, 1);
+    const weekNo = Math.ceil(
+      ((tempDate.getTime() - yearStart.getTime()) / 86400000 + 1) / 7
+    );
+    return weekNo;
   }
 
   private getMonthLabels(): string[] {
@@ -150,20 +184,60 @@ export class DataService {
   }
 
   private aggregateWeeklyData(data: graphData[]): number[] {
-    const weeklyEarnings = Array(8).fill(0);
-    const last8Weeks = this.getLast8WeeksDateRanges();
+    console.log('Weekly data:', data);
 
-    data.forEach((item) => {
-      const itemDate = new Date(item.dateKey);
-      last8Weeks.forEach((week, index) => {
-        const [weekStart, weekEnd] = week;
-        if (itemDate >= weekStart && itemDate <= weekEnd) {
-          weeklyEarnings[index] += item.totalAmount;
-        }
-      });
+    // Initialize the array to hold weekly earnings for the last 8 weeks
+    const weeklyEarnings = Array(8).fill(0);
+    const last8Weeks = this.getLast8WeeksDateRanges(); // Get the last 8 weeks date ranges
+
+    // Convert date ranges from last8Weeks to Date objects for comparison
+    const weekRanges = last8Weeks.map((range) => {
+      const [start, end] = range;
+      return {
+        start: new Date(start),
+        end: new Date(end),
+      };
     });
 
+    // Aggregate earnings
+    data.forEach((item) => {
+      // Check if dateKey is valid and is a string
+      if (
+        item.dateKey &&
+        typeof item.dateKey === 'string' &&
+        item.dateKey.length === 6
+      ) {
+        const year = parseInt(item.dateKey.substring(0, 4), 10);
+        const week = parseInt(item.dateKey.substring(4), 10);
+
+        // Validate year and week
+        if (!isNaN(year) && !isNaN(week) && week >= 1 && week <= 53) {
+          const date = this.getDateFromWeek(year, week); // Convert week and year to a Date object
+
+          // Aggregate total amount based on the week range
+          weekRanges.forEach((range, index) => {
+            if (date >= range.start && date <= range.end) {
+              weeklyEarnings[index] += item.totalAmount;
+            }
+          });
+        } else {
+          console.warn(`Invalid year or week in dateKey: ${item.dateKey}`);
+        }
+      } else {
+        console.warn(`Invalid dateKey format: ${item.dateKey}`);
+      }
+    });
+
+    console.log('Weekly data - Weekly earnings:', weeklyEarnings);
+
     return weeklyEarnings;
+  }
+
+  // Helper function to convert year and week number to a Date object (e.g., the start of the week)
+  private getDateFromWeek(year: number, week: number): Date {
+    const janFirst = new Date(year, 0, 1);
+    const days = (week - 1) * 7;
+    return new Date(janFirst.setDate(janFirst.getDate() + days));
   }
 
   private getLast8WeeksDateRanges(): [Date, Date][] {

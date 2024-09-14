@@ -40,7 +40,7 @@ export class LoginComponent {
     if (this.loginForm.invalid) {
       return;
     }
-    this.api.postWithNoToken('auth/login', this.loginForm.value).subscribe({
+    this.api.postWithoutToken('auth/login', this.loginForm.value).subscribe({
       next: (res) => {
         console.log('this is res...', res);
 
@@ -48,7 +48,7 @@ export class LoginComponent {
         this.router.navigate(['home']);
       },
       error: (err) => {
-        console.log('this is erro....', err);
+        console.log('this is erro....', err.errors.message);
 
         this.notify.showError(`${err.message}`, 'error');
       },

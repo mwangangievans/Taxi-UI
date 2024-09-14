@@ -1,10 +1,12 @@
 <div class="h-[80vh] _radius flex justify-between gap-4">
     <div class="w-1/4 mx-4 bg-white _radius p-2">
         <div class="max-w-sm mx-auto bg-white srounded-lg overflow-hidden my-4 p-6">
+
             <div class="flex justify-center">
-                <img class="w-48 h-48 object-cover rounded-full border-4 border-teal-500"
-                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330" alt="Profile Picture">
+                <img class="w-48 h-48 object-cover rounded-full border-4 border-teal-500" [src]="[dynamicProfileUrl]"
+                    alt="">
             </div>
+
             <div class=" mt-12">
                 <div class="mt-4  justify-between w-full">
                     <p class="text-green_">Name: <span class="px-2 text-black">{{userObject.user.name}}</span></p>
@@ -13,61 +15,49 @@
                     <p class="text-green_">Email: <span class="text-black">{{userObject.user.email}}</span></p>
                 </div>
                 <div class="mt-4  justify-between w-full">
-                    <p class="text-green_">Role: <span class="text-black">{{userObject.user.roles}}</span></p>
+                    <p class="text-green_">Role: <span class="text-black">{{userObject.user.roles }}</span>
+                    </p>
                 </div>
 
-                <!-- <div class="mt-4 text-sm text-gray-700">
+                <div class="mt-4 text-sm text-gray-700">
                     <p class="text-green_">Bio:</p>
-                    <p>A random paragraph can also be an excellent way for a writer to tackle writer's block. Writing
-                        block
-                        can often happen due to being stuck with a current project that the writer is trying to
-                        complete...</p>
-                </div> -->
+                    <p>{{userProfile.bio | trancateWords:100}}</p>
+                </div>
                 <div class="mt-8">
                     <p class="text-green_">Rating</p>
                     <div class="flex justify-between mt-2">
-                        <svg class="w-6 h-6 text-yellow_" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.691h4.149c.969 0 1.371 1.24.588 1.81l-3.356 2.44a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.356-2.44a1 1 0 00-1.176 0l-3.356 2.44c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118l-3.356-2.44c-.784-.57-.38-1.81.588-1.81h4.149a1 1 0 00.95-.691l1.286-3.957z" />
-                        </svg>
-                        <svg class="w-6 h-6 text-yellow_" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.691h4.149c.969 0 1.371 1.24.588 1.81l-3.356 2.44a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.356-2.44a1 1 0 00-1.176 0l-3.356 2.44c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118l-3.356-2.44c-.784-.57-.38-1.81.588-1.81h4.149a1 1 0 00.95-.691l1.286-3.957z" />
-                        </svg>
-                        <svg class="w-6 h-6 text-yellow_" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.691h4.149c.969 0 1.371 1.24.588 1.81l-3.356 2.44a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.356-2.44a1 1 0 00-1.176 0l-3.356 2.44c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118l-3.356-2.44c-.784-.57-.38-1.81.588-1.81h4.149a1 1 0 00.95-.691l1.286-3.957z" />
-                        </svg>
-                        <svg class="w-6 h-6 text-yellow_" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.691h4.149c.969 0 1.371 1.24.588 1.81l-3.356 2.44a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.356-2.44a1 1 0 00-1.176 0l-3.356 2.44c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118l-3.356-2.44c-.784-.57-.38-1.81.588-1.81h4.149a1 1 0 00.95-.691l1.286-3.957z" />
-                        </svg>
-                        <svg class="w-6 h-6 text-yellow_" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.691h4.149c.969 0 1.371 1.24.588 1.81l-3.356 2.44a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.356-2.44a1 1 0 00-1.176 0l-3.356 2.44c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118l-3.356-2.44c-.784-.57-.38-1.81.588-1.81h4.149a1 1 0 00.95-.691l1.286-3.957z" />
-                        </svg>
+                        <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+                            <svg *ngIf="rating >= star" class="w-6 h-6 text-yellow_" fill="currentColor"
+                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.691h4.149c.969 0 1.371 1.24.588 1.81l-3.356 2.44a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.356-2.44a1 1 0 00-1.176 0l-3.356 2.44c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118l-3.356-2.44c-.784-.57-.38-1.81.588-1.81h4.149a1 1 0 00.95-.691l1.286-3.957z" />
+                            </svg>
+                            <svg *ngIf="rating < star" class="w-6 h-6 text-gray-300" fill="currentColor"
+                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.691h4.149c.969 0 1.371 1.24.588 1.81l-3.356 2.44a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.356-2.44a1 1 0 00-1.176 0l-3.356 2.44c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118l-3.356-2.44c-.784-.57-.38-1.81.588-1.81h4.149a1 1 0 00.95-.691l1.286-3.957z" />
+                            </svg>
+                        </ng-container>
                     </div>
                 </div>
+
                 <div class="mt-4  justify-between w-full">
-                    <p class="text-green_">Trips: <span class="px-2 text-black">78</span></p>
-                    <p class="text-green_">Cancellations: <span class="px-2  text-black">0</span></p>
+                    <p class="text-green_">Trips: <span class="px-2 text-black">{{userProfile.trips}}</span></p>
                 </div>
             </div>
         </div>
 
     </div>
-    <div class="w-3/4 mx-4 bg-white _radius p-2">
-        <div class="max-w-4xl mx-auto bg-white rounded-lg overflow-hidden my-4 p-6">
-            <!-- KYC Documents Section -->
+
+
+    <div class="w-3/4 mx-4 bg-white _radius p-2 overflow-auto scrollbar-hide h-full">
+        <h3 class="text-teal-600 text-lg font-semibold mb-4 p-4">KYC Documents</h3>
+
+        <div class=" mx-auto bg-white rounded-lg    my-4 p-6">
 
             <div class="mb-6">
-                <h3 class="text-teal-600 text-lg font-semibold mb-4">KYC Documents</h3>
                 <table *ngIf="userKycDoc.length" class="w-full text-sm text-left text-gray-500">
+
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
                             <th scope="col" class="px-6 py-3">Document number</th>
@@ -83,7 +73,7 @@
                                 {{ document.documentNumber }}
                                 <div
                                     class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2 whitespace-no-wrap z-2">
-                                    Click to download
+                                    Click to view
                                 </div>
                             </td>
 
@@ -116,10 +106,9 @@
 
             </div>
 
-            <!-- Trips Section -->
             <h3 class="text-teal-600 text-lg font-semibold mb-4">Trips </h3>
 
-            <div class=" overflow-auto scrollbar-hide h-64">
+            <div class="">
                 <div class="w-full justify-start pt-8">
                     <div class="">
                         <div class=" border-b-2 border-gray_    px-2">
@@ -150,26 +139,19 @@
                                 <th scope="col" class="px-6 py-3">Approval Status </th>
 
 
-                                <!-- <th scope="col" class="px-6 py-3">Number Plate</th>
-                        <th scope="col" class="px-6 py-3">Documents</th>
-                        <th scope="col" class="px-6 py-3">Status</th> -->
-                                <!-- <th scope="col" class="px-6 py-3">More</th> -->
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let row of tripdata"
                                 [ngClass]="{'odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700': true}">
-                                <td scope="row"
-                                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <td scope="row" class="font-medium text-gray-900  dark:text-white">
                                     {{ row.departureTime | date:'EEEE, MMMM d, y' }} </td>
-                                <!-- <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
 
-                    </td> -->
                                 <td class="px-6 py-4 ">{{ row.driverName }}</td>
 
-                                <td class="px-6 py-4 ">{{ row.numberOfSeats }}</td>
-                                <td class="px-6 py-4 ">{{ row.pricePerSeat | currency: 'KSH ' : 'symbol' : '' }}</td>
-                                <!-- <td class="px-6 py-4">{{ row.departureTime | date:'EEEE, MMMM d, y' }}</td> -->
+                                <td class="px-6 py-0 ">{{ row.numberOfSeats }}</td>
+                                <td class="">{{ row.pricePerSeat | currency: 'KSH ' : 'symbol' : ''
+                                    }}</td>
                                 <td>
 
 
@@ -182,42 +164,25 @@
                                 </td>
 
 
-                                <!-- 
-                        <td class="px-6 py-4 ">{{ getPlaceName(row.destinationReverseGeoCoordinatesResponse)
-                            | trancateWords:10}}</td> -->
-
-
-                                <!--<td class="px-6 py-4">{{ row.numberPlate }}</td>
-                        <td class="px-6 py-4">{{ row.documents }}</td> -->
                                 <td class="px-6 py-4 flex">
                                     <button *ngIf="row.tripApprovalStatus === 'DRIVER_APPROVAL'" type="button"
-                                        class="flex items-center text-white bg-yellow_ hover:bg-yellow_ focus:ring-0 focus:ring-none font-medium _radius text-sm px-6 py-1 me-2 mb-2">
-                                        <svg class="w-6 h-6 text-gray-800 me-2" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                            viewBox="0 0 24 24">
-                                            <path stroke="white" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="M5 12h14m-7 7V5" />
-                                        </svg>
+                                        class="flex text-nowrap items-center text-white bg-yellow_ hover:bg-yellow_ focus:ring-0 focus:ring-none font-medium _radius text-sm px-6 py-1 me-2 mb-2">
+
                                         Driver Approval
                                     </button>
                                     <button *ngIf="row.tripApprovalStatus === 'AUTO_APPROVE'" type="button"
-                                        class="flex items-center text-green-800 bg-green-200 hover:bg-green-300 focus:ring-0 focus:ring-none font-medium _radius text-sm px-6 py-1 me-2 mb-2">
-                                        <svg class="w-6 h-6 text-gray-800" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                            viewBox="0 0 24 24">
-                                            <path stroke="#017873" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5" />
-                                        </svg>
+                                        class="flex items-center text-nowrap text-green-800 bg-green-200 hover:bg-green-300 focus:ring-0 focus:ring-none font-medium _radius text-sm px-6 py-1 me-2 mb-2">
+
                                         Auto Approval
                                     </button>
                                 </td>
-                                <!-- <td class="px-6 py-4">
-                            <a class="font-medium text-gray-700 dark:text-gray-300 cursor-pointer">View</a>
-                        </td> -->
+
                             </tr>
                         </tbody>
                     </table>
                 </div>
+
+
 
 
                 <div *ngIf="!tripdata.length "

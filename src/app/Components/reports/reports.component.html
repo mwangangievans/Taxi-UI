@@ -2,14 +2,14 @@
     <div class="flex p-6 ">
         <div class="grid grid-cols-4 gap-12  w-full ">
             <div
-                class="max-w-sm  px-12 py-4 font-bold text-black bg-yellow_lighter border-2 border-yellow_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans">
+                class="max-w-sm  px-12 py-8 font-bold text-black bg-yellow_lighter border-2 border-yellow_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans">
                 {{totalearings | currency: 'Ksh. ' }}
                 <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                 </h5>
                 <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Total earnings</p>
             </div>
             <div
-                class="max-w-sm  font-bold text-black   px-12 py-4 bg-green_lighter_2 border-2 border-green_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans">
+                class="max-w-sm  font-bold text-black   px-12 py-8 bg-green_lighter_2 border-2 border-green_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans">
                 {{totalCommission | currency: 'Ksh. ' }}
                 <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                 </h5>
@@ -72,7 +72,7 @@
 
         </div>
     </div>
-    <div class=" bg-white_ _radius">
+    <div class="  p-4 bg-white_ _radius">
 
         <div class="w-full justify-start">
             <div class="py-6 mt-4">
@@ -82,7 +82,7 @@
                             class="whitespace-nowrap cursor-pointer inline-flex  py-1 px-3 text-sm text-gray font-medium transition-all duration-200 ease-in-out"
                             [ngClass]="{
                              'text-gray-600 hover:bg-white_ hover:text-gray-900': !stat.active,
-                             'bg-white_ !text-green_ border-b-2 !border-green_ ': stat.active
+                             'bg-white_ font-bold text-xl !text-green_ border-b-2 !border-green_ ': stat.active
                            }">
                             {{ stat.title }}
                         </a>
@@ -92,17 +92,15 @@
         </div>
         <!-- ================================table=============================== -->
 
-        <div class="relative overflow-x-auto sm:rounded-lg my-12 shadow-md">
+        <div class="relative overflow-x-auto sm:rounded-lg my-12">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <!-- <th scope="col" class="px-6 py-3">Transaction ID</th> -->
                         <th scope="col" class="px-6 py-3">Transaction Date</th>
                         <th scope="col" class="px-6 py-3">Amount</th>
                         <th scope="col" class="px-6 py-3">Commission</th>
                         <th scope="col" class="px-6 py-3">Starting Point</th>
                         <th scope="col" class="px-6 py-3">Destination</th>
-                        <th scope="col" class="px-6 py-3">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -111,33 +109,19 @@
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             {{ row.transactionDate | date: 'M/d/yy, h:mm a'}}
                         </th>
-                        <!-- <td class="px-6 py-4">{{ row.transactionDate | date: 'M/d/yy, h:mm a'}}</td> -->
 
                         <td class="px-6 py-4">{{ row.amount | currency: 'Ksh. ' }}</td>
                         <td class="px-6 py-4">{{ row.commissionAmount | currency: 'Ksh. ' }}</td>
                         <td class="px-6 py-4">{{ row.startPointReverseGeoCoordinatesResponse }}</td>
                         <td class="px-6 py-4">{{ row.destinationReverseGeoCoordinatesResponse }}</td>
-                        <td class="px-6 py-4">
-                            <button *ngIf="row.amount === 0" type="button"
-                                class="flex items-center text-white_ bg-yellow_ hover:bg-yellow-300 focus:ring-0 focus:ring-none font-medium _radius text-sm px-6 py-1 me-2 mb-2">
 
-                                processing
-                            </button>
-                            <button *ngIf="row.amount > 0" type="button"
-                                class="flex items-center text-green_ bg-green_lighter_2 hover:bg-green-300 focus:ring-0 focus:ring-none font-medium _radius text-sm px-6 py-1 me-2 mb-2">
-                                <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                    width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                    <path stroke="#10B981" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5" />
-                                </svg>
-                                Approved
-                            </button>
-                        </td>
 
                     </tr>
                 </tbody>
             </table>
         </div>
+
+
 
 
     </div>

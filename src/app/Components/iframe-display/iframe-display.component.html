@@ -1,0 +1,14 @@
+<div mat-dialog-content class="p-4 m-2 flex items-center justify-center">
+    <div *ngIf="data.fileExtension === 'jpg' || data.fileExtension === 'png' || data.fileExtension === 'jpeg' || data.fileExtension === ''"
+        class="flex items-center justify-center w-full h-full">
+        <img [src]="data.link" alt="Image" class="max-w-full max-h-full object-contain">
+    </div>
+    <div *ngIf="data.fileExtension === 'pdf'" class="w-full h-full flex items-center justify-center">
+        <iframe [src]="data.link | safe: 'resourceUrl'" class="w-full h-full border-none"></iframe>
+    </div>
+
+</div>
+<!-- <div mat-dialog-actions class="flex justify-end p-4">
+    <button mat-button mat-dialog-close
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Close</button>
+</div> -->

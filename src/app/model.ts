@@ -87,23 +87,21 @@ export interface UserProfile {
   hasVerifiedCustomerProfile: boolean;
   hasUploadedDriverKycDocuments: boolean;
   hasUploadedCustomerKycDocuments: boolean;
+  gender: 'MALE' | 'FEMALE'; // Assuming these are the only possible values
+  bio: string;
+  profilePicFileId: string;
 }
 
+// Interface for the user object
 export interface User {
   userId: number;
   name: string;
   email: string;
   roles: string[];
-  userProfile: {
-    profileId: number;
-    phoneNumber: string;
-    hasVerifiedDriverProfile: boolean;
-    hasVerifiedCustomerProfile: boolean;
-    hasUploadedDriverKycDocuments: boolean;
-    hasUploadedCustomerKycDocuments: boolean;
-  };
+  userProfile: UserProfile;
 }
 
+// Interface for the complete response
 export interface UserResponse {
   user: User;
   userProfile: UserProfile;
@@ -128,4 +126,33 @@ export interface KycDocumentFilter {
   title: string;
   active: boolean;
   name: string;
+}
+
+export interface DataItem {
+  dateKey: string;
+  totalAmount: number;
+}
+
+export interface WeekRange {
+  range: string;
+  totalAmount: number;
+}
+
+export interface userProfile {
+  name: string;
+  userId: number;
+  genderInt: number;
+  trips: number;
+  ratings: number | null;
+  bio: string;
+  profilePicFileId: string;
+}
+
+export interface TripCoordinate {
+  tripCoordinateId: number;
+  tripId: number;
+  coordinateContributorUserId: number;
+  latitude: number;
+  longitude: number;
+  createdOn: number;
 }

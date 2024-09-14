@@ -4,8 +4,9 @@ import { StorageService } from './storage.service';
 import { environment } from '../../environments/environment';
 import { UserSessionService } from './user-session.service';
 import { UserSession } from '../model';
-import { Observable } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
 import { Location } from '@angular/common';
+import { NotificationService } from './notification.service';
 
 const baseUrl = environment.apiUrl;
 
@@ -13,56 +14,56 @@ const baseUrl = environment.apiUrl;
   providedIn: 'root',
 })
 export class HttpService {
-  userToken: any;
-  UserSessionData!: UserSession;
-
   constructor(
     private http: HttpClient,
     private storageService: StorageService,
-    private _UserSessionService: UserSessionService,
-    private location: Location
-  ) {
-    this.getUserToken();
-    // this.UserSessionData = this._UserSessionService.getSession()?.accessToken;
-  }
+    private userSessionService: UserSessionService,
+    private location: Location,
+    private notify: NotificationService
+  ) {}
 
-  SetHeaders() {
+  private getHeaders(): HttpHeaders {
+    const token = this.userSessionService.getSession()?.accessToken;
     return new HttpHeaders({
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${
-        this._UserSessionService.getSession()?.accessToken
-      }`,
+      Authorization: token ? `Bearer ${token}` : '',
     });
-  }
-
-  async getUserToken() {
-    this.userToken = await this._UserSessionService.getSession()?.accessToken;
   }
 
   goBack(): void {
     this.location.back();
   }
 
-  get(route: string): Observable<any> {
+  get<T>(route: string): Observable<T> {
     return this.http
-      .get<any>(`${baseUrl}${route}`, {
-        headers: this.SetHeaders(),
+      .get<T>(`${baseUrl}${route}`, {
+        headers: this.getHeaders(),
       })
-      .pipe();
+      .pipe(
+        catchError((error) => {
+          this.handleError('Error fetching data.', error);
+          return of(([] || {} || '') as T);
+        })
+      );
   }
-  getWithNoToken(route: string): Observable<any> {
+
+  getWithoutToken(route: string): Observable<any> {
     return this.http.get<any>(`${baseUrl}${route}`);
   }
 
-  post(route: string, token: string, payload?: any): Observable<any> {
+  post(route: string, payload?: any): Observable<any> {
     console.log({ payload });
-
     return this.http.post<any>(`${baseUrl}${route}`, payload, {
-      headers: this.SetHeaders(),
+      headers: this.getHeaders(),
     });
   }
-  postWithNoToken(route: string, payload?: any): Observable<any> {
+
+  postWithoutToken(route: string, payload?: any): Observable<any> {
     return this.http.post<any>(`${baseUrl}${route}`, payload);
+  }
+  private handleError(message: string, error: any): void {
+    console.error(message, error);
+    this.notify.showError(message, 'error'); // Show user-friendly error message
   }
 }

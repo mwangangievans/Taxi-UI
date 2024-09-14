@@ -46,20 +46,22 @@ export class SettingsComponent {
 
   constructor(private api: HttpService, private notify: NotificationService) {}
   getKycs(filter: string) {
-    this.api.get(`kycConfiguration?userRole=${filter}`).subscribe({
-      next: (response) => {
-        this.kyscData = response;
-      },
-      error: (error) => {
-        console.error('Error fetching users:', error);
-        this.kyscData = [];
-        // Handle any errors here, such as showing an error message to the user
-      },
-      complete: () => {
-        console.log('Completed the request to get users.');
-        // Optional: Execute any additional code after the request completes
-      },
-    });
+    this.api
+      .get<kycConfiguration[]>(`kycConfiguration?userRole=${filter}`)
+      .subscribe({
+        next: (response) => {
+          this.kyscData = response;
+        },
+        error: (error) => {
+          console.error('Error fetching users:', error);
+          this.kyscData = [];
+          // Handle any errors here, such as showing an error message to the user
+        },
+        complete: () => {
+          console.log('Completed the request to get users.');
+          // Optional: Execute any additional code after the request completes
+        },
+      });
   }
 
   // filters = [
@@ -85,7 +87,7 @@ export class SettingsComponent {
     }
   }
   getKycsConfigurations() {
-    this.api.get(`configuration`).subscribe({
+    this.api.get<configurationInterface[]>(`configuration`).subscribe({
       next: (response) => {
         this.kycConfiguration = response;
       },
@@ -104,5 +106,17 @@ export class SettingsComponent {
   //   return this.filters.find((filter) => filter.name === name);
   // }
   addKyc() {}
+  getStatusLabel(status: string): string {
+    switch (status) {
+      case 'COMPULSORY':
+        return 'Mandatory';
+      case 'OPTIONAL':
+        return 'Optional';
+      case 'NO_LONGER_REQUIRED':
+        return 'No Longer Required';
+      default:
+        return '';
+    }
+  }
 }
 //COMPULSORY, OPTIONAL, NO_LONGER_REQUIRED

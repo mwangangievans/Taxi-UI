@@ -6,6 +6,7 @@ import { DataService } from '../../service/data.service';
 import { CommonModule } from '@angular/common';
 import { UsersComponent } from '../users/users.component';
 import { HttpService } from '../../service/http.service';
+import { addIcons } from 'ionicons';
 
 @Component({
   selector: 'app-dashboard',
@@ -45,12 +46,35 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   loadGraphData(filter: string) {
     this.dataService.getGraphData(filter).subscribe({
       next: (data) => {
+        console.log({ filter }, { data });
+
         switch (filter) {
           case 'Daily':
             this.dailyData = data;
             break;
           case 'Weekly':
-            this.weeklyData = data;
+            this.weeklyData = [
+              {
+                dateKey: '202450',
+                totalAmount: 22500,
+              },
+              {
+                dateKey: '202435',
+                totalAmount: 1000,
+              },
+              {
+                dateKey: '202434',
+                totalAmount: 5100,
+              },
+              {
+                dateKey: '202433',
+                totalAmount: 500,
+              },
+              {
+                dateKey: '202432',
+                totalAmount: 0,
+              },
+            ];
             break;
           case 'Monthly':
             this.monthlyData = data;
@@ -95,7 +119,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   getStatistics() {
-    this.api.get(`report/admin/dashboard/stats`).subscribe({
+    this.api.get<Statistics>(`report/admin/dashboard/stats`).subscribe({
       next: (response) => {
         this.statistics = response;
         console.log('User data retrieved:', response);

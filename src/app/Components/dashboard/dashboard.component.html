@@ -2,28 +2,32 @@
     <div class="grid grid-cols-4 gap-12 ">
         <div
             class="max-w-sm  p-4 bg-white border-2 border-green_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans">
+            <p class="mb-3  text-xl font-bold text-gray-700 dark:text-gray-400">
+                {{handleNullValue(statistics.totalEarnings) |
+                currency: 'Ksh ' : 'symbol' : '' }}
+            </p>
             <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Total earnings</h5>
-            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{handleNullValue(statistics.totalEarnings) }}
-            </p>
         </div>
         <div
             class="max-w-sm  p-4 bg-white border-2 border-green_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans">
+            <p class="mb-3 text-xl font-bold  text-gray-700 dark:text-gray-400">
+                {{handleNullValue(statistics.totalDrivers)}}
+            </p>
             <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Drivers</h5>
-            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{handleNullValue(statistics.totalDrivers)}}
-            </p>
         </div>
 
         <div
             class="max-w-sm  p-4 bg-white border-2 border-green_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans">
-            <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Passagers</h5>
-            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+            <p class="mb-3 text-xl font-bold text-gray-700 dark:text-gray-400">
                 {{handleNullValue(statistics.totalTransportedPassengers) }}</p>
+            <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Passagers</h5>
         </div>
 
         <div
             class="max-w-sm  p-4 bg-white border-2 border-green_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans">
+            <p class="mb-3 text-xl font-bold text-gray-700 dark:text-gray-400">{{handleNullValue(statistics.totalTrips)
+                }}</p>
             <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Trips</h5>
-            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{handleNullValue(statistics.totalTrips) }}</p>
         </div>
 
 

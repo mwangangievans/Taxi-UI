@@ -7,6 +7,8 @@ import { SettingsComponent } from './Components/settings/settings.component';
 import { DashboardComponent } from './Components/dashboard/dashboard.component';
 import { LoginComponent } from './Components/login/login.component';
 import { UsersDetailComponent } from './Components/users-detail/users-detail.component';
+import { IframeDisplayComponent } from './Components/iframe-display/iframe-display.component';
+import { TripsDetailComponent } from './Components/trips-detail/trips-detail.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -25,7 +27,9 @@ export const routes: Routes = [
       { path: 'reports', component: ReportsComponent },
       { path: 'trips', component: TripsComponent },
       { path: 'settings', component: SettingsComponent },
+      { path: 'doc/:id', component: IframeDisplayComponent },
       { path: 'users/:id', component: UsersDetailComponent },
+      { path: 'trips/:id', component: TripsDetailComponent },
     ],
   },
 ];

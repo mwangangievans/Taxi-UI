@@ -5,11 +5,14 @@ import { CommonModule } from '@angular/common';
 import { TrancateWordsPipe } from '../../service/trancate-words.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { tripInterface } from '../../model';
+import { addIcons } from 'ionicons';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-trips',
   standalone: true,
-  imports: [CommonModule, MatTooltipModule, TrancateWordsPipe],
+  imports: [CommonModule, MatTooltipModule, TrancateWordsPipe, RouterModule],
+
   templateUrl: './trips.component.html',
   styleUrl: './trips.component.css',
 })
@@ -22,20 +25,22 @@ export class TripsComponent {
 
   constructor(private api: HttpService, private notify: NotificationService) {}
   getTrips(filter: string) {
-    this.api.get(`trip?tripCompletionStatus=${filter}`).subscribe({
-      next: (response) => {
-        this.tripdata = response.reverse();
-        // You can process the response here, e.g., update the state or UI
-      },
-      error: (error) => {
-        console.error('comming soon:', error);
-        this.tripdata = [];
-      },
-      complete: () => {
-        console.log('Completed the request to get users.');
-        // Optional: Execute any additional code after the request completes
-      },
-    });
+    this.api
+      .get<tripInterface[]>(`trip?tripCompletionStatus=${filter}`)
+      .subscribe({
+        next: (response) => {
+          this.tripdata = response.reverse();
+          // You can process the response here, e.g., update the state or UI
+        },
+        error: (error) => {
+          console.error('comming soon:', error);
+          this.tripdata = [];
+        },
+        complete: () => {
+          console.log('Completed the request to get users.');
+          // Optional: Execute any additional code after the request completes
+        },
+      });
   }
 
   filters = [
