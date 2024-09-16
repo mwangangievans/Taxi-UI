@@ -142,11 +142,26 @@ export class DataService {
       const index = `${year}${weekNumber.toString().padStart(2, '0')}`;
 
       // Format the date range for display
-      const range = `${formatDate(
-        startOfWeek,
-        'MMM d',
-        'en'
-      )}   to   ${formatDate(endOfWeek, 'MMM d', 'en')}`;
+      const startMonth = formatDate(startOfWeek, 'MMM', 'en');
+      const endMonth = formatDate(endOfWeek, 'MMM', 'en');
+
+      let range = '';
+
+      if (startMonth === endMonth) {
+        // Same month, only show the month once
+        range = `${startMonth} ${formatDate(
+          startOfWeek,
+          'd',
+          'en'
+        )} to ${formatDate(endOfWeek, 'd', 'en')}`;
+      } else {
+        // Different months, show both
+        range = `${startMonth} ${formatDate(
+          startOfWeek,
+          'd',
+          'en'
+        )} to ${endMonth} ${formatDate(endOfWeek, 'd', 'en')}`;
+      }
 
       // Push the index and date range into the array
       weekLabels.push({ index, range });

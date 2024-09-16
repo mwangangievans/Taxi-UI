@@ -64,40 +64,63 @@
         </div>
     </div>
 
+    <div *ngIf="!totalItems && !isLoading" class="flex items-center justify-center text-lg font-semibold mb-4 h-1/2">
+        <p class="text-center text-3xl">no records available</p>
+    </div>
+    <app-loader *ngIf="isLoading"></app-loader>
 
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th scope="col" class="px-6 py-3">#</th>
-                <th scope="col" class="px-6 py-3">Name</th>
-                <th scope="col" class="px-6 py-3">ROLE</th>
-                <th scope="col" class="px-6 py-3">EMAIL</th>
-                <th scope="col" class="px-6 py-3">PHONE NUMBER</th>
-                <th scope="col" class="px-6 py-3">More</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let row of allUsers"
-                [ngClass]="{'odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700': true}">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {{ row.userId }}
-                </th>
-                <td class="px-6 py-4">{{ row.name }}</td>
-                <td class="px-6 py-4">{{ row.roles }}</td>
-                <td class="px-6 py-4">{{ row.email }}</td>
-                <td class="px-6 py-4">{{ row.userProfile?.phoneNumber }}</td>
-
-                <td class="px-6 py-4">
-                    <a *ngIf="!getRole(row.roles)" [routerLink]="row.userId.toString()"
-                        class="font-medium text-gray-700 dark:text-gray-300 cursor-pointer">View</a>
-                </td>
+    <div *ngIf="allUsers.length">
 
 
-            </tr>
-        </tbody>
-    </table>
-</div>
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">#</th>
+                    <th scope="col" class="px-6 py-3">Name</th>
+                    <th scope="col" class="px-6 py-3">ROLE</th>
+                    <th scope="col" class="px-6 py-3">EMAIL</th>
+                    <th scope="col" class="px-6 py-3">PHONE NUMBER</th>
+                    <th scope="col" class="px-6 py-3">More</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of allUsers" [ngClass]="{
+                'odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700': true
+              }">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {{ row.userId }}
+                    </th>
+                    <td class="px-6 py-4">{{ row.name }}</td>
+                    <td class="px-6 py-4">{{ row.roles }}</td>
+                    <td class="px-6 py-4">{{ row.email }}</td>
+                    <td class="px-6 py-4">{{ row.userProfile?.phoneNumber }}</td>
+                    <td class="px-6 py-4">
+                        <a *ngIf="!getRole(row.roles)" [routerLink]="row.userId.toString()"
+                            class="font-medium text-gray-700 dark:text-gray-300 cursor-pointer">View</a>
+                    </td>
+                </tr>
+            </tbody>
 
-<div *ngIf="!allUsers.length " class="relative overflow-x-auto sm:rounded-lg flex justify-center items-center h-1/2">
-    <p class="text-center text-3xl">no records available</p>
+        </table>
+
+
+
+
+    </div>
+    <!-- Pagination Controls -->
+    <div *ngIf="allUsers.length " class="flex gap-4 items-center mt-4 mx-12">
+        <button class="px-4 py-2 bg-gray-300 text-gray-900 rounded" [disabled]="currentPage === 0"
+            (click)="onPageChange(currentPage - 1)">
+            Previous
+        </button>
+
+        <span>Page {{ currentPage + 1 }} of {{ totalItems }}</span>
+
+        <button class="px-4 py-2 bg-gray-300 text-gray-900 rounded" [disabled]="currentPage + 1 >= totalItems"
+            (click)="onPageChange(currentPage + 1)">
+            Next
+        </button>
+    </div>
+
+
 </div>

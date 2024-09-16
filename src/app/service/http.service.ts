@@ -43,7 +43,7 @@ export class HttpService {
       .pipe(
         catchError((error) => {
           this.handleError('Error fetching data.', error);
-          return of(([] || {} || '') as T);
+          return of(([] || {} || '') as T); // Returning an empty array or object in case of error
         })
       );
   }

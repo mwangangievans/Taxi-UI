@@ -8,16 +8,22 @@ import { userInterface } from '../../model';
 import { addIcons } from 'ionicons';
 import { HttpClient } from '@angular/common/http';
 import { DynamicTableComponent } from '../dynamic-table/dynamic-table.component';
+import { LoaderService } from '../../service/loader.service';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, RouterModule, DynamicTableComponent],
+  imports: [CommonModule, RouterModule, DynamicTableComponent, LoaderComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
 })
 export class UsersComponent {
-  allUsers!: userInterface[];
+  allUsers: userInterface[] = [];
+  totalItems: number = 0; // Total number of users from the server
+  pageSize: number = 5; // Number of users per page
+  currentPage: number = 0; // The current page number
+  isLoading: boolean = false;
 
   displayedColumns: string[] = [
     '#',
@@ -35,33 +41,35 @@ export class UsersComponent {
   constructor(
     private _httpClient: HttpClient,
     private api: HttpService,
-    private notify: NotificationService
-  ) {}
-
-  ngOnInit() {
-    // this._httpClient
-    //   .get('https://api.github.com/search/issues?q=repo:angular/components')
-    //   .subscribe(
-    //     (response: any) => {
-    //       this.resultsLength = response.total_count;
-    //       this.data = response.items;
-    //       this.isLoadingResults = false;
-    //     },
-    //     (error) => {
-    //       this.isRateLimitReached = true;
-    //       this.isLoadingResults = false;
-    //     }
-    //   );
-    this.getUsers('');
+    private notify: NotificationService,
+    private loaderService: LoaderService
+  ) {
+    this.isLoading = true;
   }
 
-  getUsers(filter: string) {
+  ngOnInit() {
+    this.loaderService.loading$.subscribe((loading) => {
+      this.isLoading = loading;
+    });
+    this.getUsers('', this.currentPage, this.pageSize);
+  }
+
+  getUsers(filter: string, pageIndex: number, pageSize: number) {
+    const params = {
+      kycVerificationStatus: filter,
+      page: pageIndex.toString(),
+      size: pageSize.toString(),
+    };
+
     this.api
-      .get<userInterface[]>(`user/admin?kycVerificationStatus=${filter}`)
+      .get<userInterface[]>(
+        `user/admin?kycVerificationStatus=${filter}&pageNumber=${params.page}&pageSize=${params.size}`
+      )
       .subscribe({
-        next: (response) => {
+        next: (response: any) => {
+          this.allUsers = [];
           this.allUsers = response;
-          console.log('User data retrieved:', response);
+          this.totalItems = response.length; // Assuming totalItems is sent from the backend
         },
         error: (error) => {
           console.error('Error fetching users:', error);
@@ -72,6 +80,10 @@ export class UsersComponent {
       });
   }
 
+  onPageChange(pageIndex: number) {
+    this.currentPage = pageIndex;
+    this.getUsers('', this.currentPage, this.pageSize);
+  }
   filters = [
     { id: 1, title: 'All', name: '', active: true },
     { id: 2, title: 'Pending Approval', name: 'PENDING', active: false },
@@ -85,8 +97,9 @@ export class UsersComponent {
       ...filter,
       active: i === index,
     }));
+    this.currentPage = 0;
 
-    this.getUsers(filter);
+    this.getUsers(filter, this.currentPage, this.pageSize);
   }
 
   getRole(role: any) {

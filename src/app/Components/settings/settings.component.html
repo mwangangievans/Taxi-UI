@@ -18,6 +18,12 @@
     </div>
     <!-- ================================table=============================== -->
 
+    <div *ngIf="!isLoading && !kyscData.length && activeTab === 1 "
+        class="flex items-center justify-center text-lg bg-gray-200 font-semibold mb-4 h-64">
+        <p class="text-center text-2xl">no records availabl</p>
+    </div>
+    <app-loader *ngIf="isLoading"></app-loader>
+
 
     <div *ngIf="kyscData.length && activeTab === 1" class="relative overflow-x-auto sm:rounded-lg my-12">
         <div class="container mx-auto">
@@ -154,7 +160,7 @@
     </div>
 
 
-    <div *ngIf="!kyscData.length && activeTab === 1 "
+    <!-- <div *ngIf="!kyscData.length && activeTab === 1 "
         class="relative overflow-x-auto sm:rounded-lg flex justify-center items-center h-1/2">
         <p class="text-center text-3xl">no records available</p>
-    </div>
+    </div> -->

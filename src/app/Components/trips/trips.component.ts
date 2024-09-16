@@ -7,28 +7,60 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { tripInterface } from '../../model';
 import { addIcons } from 'ionicons';
 import { RouterModule } from '@angular/router';
+import { LoaderService } from '../../service/loader.service';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: 'app-trips',
   standalone: true,
-  imports: [CommonModule, MatTooltipModule, TrancateWordsPipe, RouterModule],
+  imports: [
+    CommonModule,
+    MatTooltipModule,
+    TrancateWordsPipe,
+    RouterModule,
+    LoaderComponent,
+  ],
 
   templateUrl: './trips.component.html',
   styleUrl: './trips.component.css',
 })
 export class TripsComponent {
   display_name!: string;
-  tripdata!: tripInterface[];
+  isLoading: boolean = false;
+
+  tripdata: tripInterface[] = [];
+  totalItems: number = 0; // Total number of users from the server
+  pageSize: number = 5; // Number of users per page
+  currentPage: number = 0; // The current page number
+
   ngOnInit() {
-    this.getTrips('');
+    this.loaderService.loading$.subscribe((loading) => {
+      this.isLoading = loading;
+    });
+    this.getTrips('', this.currentPage, this.pageSize);
   }
 
-  constructor(private api: HttpService, private notify: NotificationService) {}
-  getTrips(filter: string) {
+  constructor(
+    private api: HttpService,
+    private notify: NotificationService,
+    private loaderService: LoaderService
+  ) {
+    this.isLoading = true;
+  }
+  getTrips(filter: string, pageIndex: number, pageSize: number) {
+    const params = {
+      kycVerificationStatus: filter,
+      page: pageIndex.toString(),
+      size: pageSize.toString(),
+    };
     this.api
-      .get<tripInterface[]>(`trip?tripCompletionStatus=${filter}`)
+      .get<tripInterface[]>(
+        `trip?tripCompletionStatus=${filter}&pageNumber=${params.page}&pageSize=${params.size}`
+      )
       .subscribe({
         next: (response) => {
+          this.tripdata = [];
+          this.totalItems = response.length;
           this.tripdata = response.reverse();
           // You can process the response here, e.g., update the state or UI
         },
@@ -43,6 +75,11 @@ export class TripsComponent {
       });
   }
 
+  onPageChange(pageIndex: number) {
+    this.currentPage = pageIndex;
+    this.getTrips('', this.currentPage, this.pageSize);
+  }
+
   filters = [
     { id: 1, title: 'All TRIPS', name: '', active: true },
     { id: 2, title: 'UPCOMING', name: 'UPCOMING', active: false },
@@ -55,8 +92,9 @@ export class TripsComponent {
       ...filter,
       active: i === index,
     }));
+    this.currentPage = 0;
 
-    this.getTrips(filter);
+    this.getTrips('', this.currentPage, this.pageSize);
   }
 
   getPlaceName(startPointReverseGeoCoordinatesResponse: string): string {

@@ -6,45 +6,77 @@ import { CommonModule } from '@angular/common';
 import { GeoResponse, Transaction } from '../../model';
 import { addIcons } from 'ionicons';
 import { IframeDisplayComponent } from '../iframe-display/iframe-display.component';
+import { LoaderComponent } from '../loader/loader.component';
+import { LoaderService } from '../../service/loader.service';
 
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [UsersComponent, CommonModule, IframeDisplayComponent],
+  imports: [
+    UsersComponent,
+    CommonModule,
+    IframeDisplayComponent,
+    LoaderComponent,
+  ],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.css',
 })
 export class ReportsComponent {
   Transactions: Transaction[] = [];
+  totalItems: number = 0; // Total number of users from the server
+  pageSize: number = 5; // Number of users per page
+  currentPage: number = 0; // The current page number
   totalearings: number = 0;
   totalCommission: number = 0;
+  isLoading: boolean = false;
 
   ngOnInit() {
-    this.getTransactions();
+    this.loaderService.loading$.subscribe((loading) => {
+      this.isLoading = loading;
+    });
+    this.getTransactions(this.currentPage, this.pageSize);
   }
 
-  // statistics = [
-  //   { value: 'KES 300,000.00', title: 'Total earnings' },
-  //   { value: '30,000', title: 'Total Commission' },
-  // ];
+  constructor(
+    private api: HttpService,
+    private notify: NotificationService,
+    private loaderService: LoaderService
+  ) {
+    this.isLoading = true;
+  }
+  getTransactions(pageIndex: number, pageSize: number) {
+    const params = {
+      page: pageIndex.toString(),
+      size: pageSize.toString(),
+    };
+    //        `user/admin?pageNumber=${params.page}&pageSize=${params.size}`,
 
-  constructor(private api: HttpService, private notify: NotificationService) {}
-  getTransactions() {
-    this.api.get<Transaction[]>('report/transaction').subscribe({
-      next: (response) => {
-        this.Transactions = this.formatTransactions(response);
-        if (this.Transactions.length) {
-          this.totalearings = this.calculateTotalAmount(this.Transactions);
-          this.totalCommission = this.calculateTotalCommissions(
-            this.Transactions
-          );
-        }
+    this.api
+      .get<Transaction[]>(
+        `report/transaction?pageNumber=${params.page}&pageSize=${params.size}`
+      )
+      .subscribe({
+        next: (response) => {
+          this.totalItems = response.length;
+          this.Transactions = this.formatTransactions(response);
 
-        console.log('Transactions', this.Transactions);
-      },
-      error: (error) => {},
-      complete: () => {},
-    });
+          if (this.Transactions.length) {
+            this.totalearings = this.calculateTotalAmount(this.Transactions);
+            this.totalCommission = this.calculateTotalCommissions(
+              this.Transactions
+            );
+          }
+
+          console.log('Transactions', this.Transactions);
+        },
+        error: (error) => {},
+        complete: () => {},
+      });
+  }
+
+  onPageChange(pageIndex: number) {
+    this.currentPage = pageIndex;
+    this.getTransactions(this.currentPage, this.pageSize);
   }
 
   filters = [{ id: 1, title: 'Transactions', active: true }];
@@ -76,6 +108,7 @@ export class ReportsComponent {
       ...filter,
       active: i === index,
     }));
+    this.currentPage = 0;
   }
   calculateTotalAmount(transactions: Transaction[]): number {
     return transactions.reduce(

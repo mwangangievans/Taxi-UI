@@ -20,6 +20,11 @@
         </div>
     </div>
     <!-- ================================table=============================== -->
+    <div *ngIf="!totalItems && !isLoading"
+        class="flex items-center justify-center text-lg bg-gray-200 font-semibold mb-4 h-full">
+        <p class="text-center text-3xl">no records available</p>
+    </div>
+    <app-loader *ngIf="isLoading"></app-loader>
 
 
     <div *ngIf="tripdata.length" class="relative overflow-x-auto  sm:rounded-lg my-12">
@@ -37,9 +42,7 @@
                     <th scope="col" class="px-6 py-3">Action</th>
 
 
-                    <!-- <th scope="col" class="px-6 py-3">Number Plate</th>
-                        <th scope="col" class="px-6 py-3">Documents</th>
-                        <th scope="col" class="px-6 py-3">Status</th> -->
+
                 </tr>
             </thead>
             <tbody>
@@ -68,13 +71,6 @@
                     </td>
 
 
-                    <!-- 
-                        <td class="px-6 py-4 ">{{ getPlaceName(row.destinationReverseGeoCoordinatesResponse)
-                            | trancateWords:10}}</td> -->
-
-
-                    <!--<td class="px-6 py-4">{{ row.numberPlate }}</td>
-                        <td class="px-6 py-4">{{ row.documents }}</td> -->
                     <td class="px-6 py-4 flex">
                         <button *ngIf="row.tripApprovalStatus === 'DRIVER_APPROVAL'" type="button"
                             class="flex items-center text-white bg-yellow_ hover:bg-yellow_ focus:ring-0 focus:ring-none font-medium _radius text-sm px-6 py-1 me-2 mb-2">
@@ -87,9 +83,7 @@
                             Auto Approval
                         </button>
                     </td>
-                    <!-- <td class="px-6 py-4">
-                            <a class="font-medium text-gray-700 dark:text-gray-300 cursor-pointer">View</a>
-                        </td> -->
+
                     <td class="px-6 py-4">
                         <a [routerLink]="row.tripId.toString()"
                             class="font-medium text-gray-700 dark:text-gray-300 cursor-pointer">View</a>
@@ -100,11 +94,24 @@
         </table>
     </div>
 
+    <div *ngIf="tripdata.length " class="flex gap-4 items-center mt-4 mx-12">
+        <button class="px-4 py-2 bg-gray-300 text-gray-900 rounded" [disabled]="currentPage === 0"
+            (click)="onPageChange(currentPage - 1)">
+            Previous
+        </button>
 
-    <div *ngIf="!tripdata.length"
-        class="flex items-center justify-center text-lg bg-gray-200 font-semibold mb-4 h-full">
-        <p>No Trips Available</p>
+        <span>Page {{ currentPage + 1 }} of {{ totalItems }}</span>
+
+        <button class="px-4 py-2 bg-gray-300 text-gray-900 rounded"
+            [disabled]="currentPage == totalItems || currentPage > totalItems" (click)="onPageChange(currentPage + 1)">
+            Next
+        </button>
     </div>
+
+
+    <!-- <div *ngIf="!totalItems" class="flex items-center justify-center text-lg bg-gray-200 font-semibold mb-4 h-full">
+        <p>No Trips Available</p>
+    </div> -->
 
     <!-- </div> -->
 </div>

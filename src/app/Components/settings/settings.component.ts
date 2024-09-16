@@ -8,11 +8,13 @@ import {
   kycConfiguration,
   KycDocumentFilter,
 } from '../../model';
+import { LoaderComponent } from '../loader/loader.component';
+import { LoaderService } from '../../service/loader.service';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [UsersComponent, CommonModule], // Ensure UsersComponent is standalone or declared in a shared module
+  imports: [UsersComponent, CommonModule, LoaderComponent], // Ensure UsersComponent is standalone or declared in a shared module
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css'], // Corrected from 'styleUrl' to 'styleUrls' and it should be an array
 })
@@ -22,10 +24,16 @@ export class SettingsComponent {
   activeTab: 1 | 2 | 3 = 1;
   currentSelectedKycFilter!: KycDocumentFilter;
   filters: KycDocumentFilter[] = [];
+  isLoading: boolean = false;
 
   addingKyc: boolean = false;
+
   ngOnInit() {
+    this.loaderService.loading$.subscribe((loading) => {
+      this.isLoading = loading;
+    });
     this.getKycs('DRIVER');
+
     this.filters = [
       { id: 1, title: 'Driver KYC Documents', active: true, name: 'DRIVER' },
       {
@@ -44,7 +52,13 @@ export class SettingsComponent {
     this.activeTab = tab;
   }
 
-  constructor(private api: HttpService, private notify: NotificationService) {}
+  constructor(
+    private api: HttpService,
+    private notify: NotificationService,
+    private loaderService: LoaderService
+  ) {
+    this.isLoading = true;
+  }
   getKycs(filter: string) {
     this.api
       .get<kycConfiguration[]>(`kycConfiguration?userRole=${filter}`)
@@ -55,24 +69,16 @@ export class SettingsComponent {
         error: (error) => {
           console.error('Error fetching users:', error);
           this.kyscData = [];
-          // Handle any errors here, such as showing an error message to the user
         },
         complete: () => {
           console.log('Completed the request to get users.');
-          // Optional: Execute any additional code after the request completes
         },
       });
   }
 
-  // filters = [
-  //   { id: 1, title: 'Driver KYC Documents', active: true, name: 'DRIVER' },
-  //   { id: 2, title: 'Customer KYC Documents', active: false, name: 'CUSTOMER' },
-  //   { id: 3, title: 'Configurations', active: false, name: 'CONFIGURATION' },
-  // ];
   chart: any = [];
 
   updateFilter(index: number, filter: string) {
-    // this.currentSelectedKycFilter = this.filterByName(filter);
     this.filters = this.filters.map((filter, i) => ({
       ...filter,
       active: i === index,
