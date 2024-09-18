@@ -1,4 +1,4 @@
-<div class="h-[80vh] bg-white_ _radius">
+<div class="overflow-auto md:h-[80vh] scrollbar-hide bg-white_  _radius  flex-1 flex flex-col h-screen w-full">
 
     <div class="w-full justify-start pt-12">
         <div class="">
@@ -10,7 +10,7 @@
                          'text-gray-600 hover:bg-white_ hover:text-gray-900': !stat.active,
                          'bg-white_ !text-green_ border-b-2 !border-green_ ': stat.active
                        }">
-                        {{ stat.title }}
+                        {{ stat.title | titlecase }}
                     </a>
                 </nav>
             </div>
@@ -27,14 +27,15 @@
 
     <div *ngIf="kyscData.length && activeTab === 1" class="relative overflow-x-auto sm:rounded-lg my-12">
         <div class="container mx-auto">
-            <div class="bg-white shadow rounded-lg overflow-hidden">
-                <table class="min-w-full bg-white">
+            <div class="relative overflow-x-auto">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="bg-gray-100">
                         <tr>
-                            <th class="py-3 px-4 text-left text-gray-600 font-semibold">#</th>
-                            <th class="py-3 px-4 text-left text-gray-600 font-semibold">KYC Document</th>
-                            <th class="py-3 px-4 text-left text-gray-600 font-semibold">Status</th>
-                            <th class="py-3 px-4 text-left text-gray-600 font-semibold">Action</th>
+                            <th class="py-3 px-4 text-left text-gray-600 font-semibold whitespace-nowrap">#</th>
+                            <th class="py-3 px-4 text-left text-gray-600 font-semibold whitespace-nowrap">KYC Document
+                            </th>
+                            <th class="py-3 px-4 text-left text-gray-600 font-semibold whitespace-nowrap">Status</th>
+                            <th class="py-3 px-4 text-left text-gray-600 font-semibold whitespace-nowrap">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,9 +44,9 @@
                             <td class="py-3 px-4">
                                 {{ i + 1}}
                             </td>
-                            <td class="py-3 px-4">{{ item.documentTitle | uppercase }}</td>
+                            <td class="py-3 px-4 whitespace-nowrap">{{ item.documentTitle | uppercase }}</td>
 
-                            <td class="py-3 px-4">
+                            <td class="py-3 px-4 whitespace-nowrap">
                                 <span [ngClass]="{
                                         'bg-green-100 text-text-green_ py-1 px-3 rounded-full text-xs': item.status === 'COMPULSORY',
                                         'bg-yellow_ text-white_ py-1 px-3 rounded-full text-xs': item.status === 'OPTIONAL',
@@ -54,9 +55,10 @@
                                     {{ getStatusLabel(item.status) | titlecase}}
                                 </span>
                             </td>
-                            <td class="px-6 py-2 gap-4   flex">
+                            <td class="px-6 py-2 gap-4 whitespace-nowrap  flex">
 
                                 <div class="cursor-pointer">
+
 
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="#624DE3" class="size-6">
@@ -75,7 +77,7 @@
 
                                 </div>
 
-                                <div class="cursor-pointer">
+                                <div class="cursor-pointer" (click)="updateActiveTab(3)">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="#017873" class="size-6">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -123,7 +125,7 @@
                     </td>
                     <td class="px-6 py-4 gap-2  flex">
 
-                        <div class="cursor-pointer">
+                        <div class="cursor-pointer" (click)="updateEditForm(3 , row)">
 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="#624DE3" class="size-6">
@@ -132,7 +134,7 @@
                             </svg>
 
                         </div>
-                        <div class="cursor-pointer">
+                        <!-- <div class="cursor-pointer">
 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="#A30D11" class="size-6">
@@ -148,7 +150,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                             </svg>
 
-                        </div>
+                        </div> -->
 
 
 
@@ -159,8 +161,132 @@
         </table>
     </div>
 
+    <div *ngIf="activeTab === 3">
+        <div *ngIf="selectedFilter != 'CONFIGURATION'"
+            class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+            <div class="flex sm:mx-auto sm:w-full sm:max-w-sm gap-4">
 
-    <!-- <div *ngIf="!kyscData.length && activeTab === 1 "
-        class="relative overflow-x-auto sm:rounded-lg flex justify-center items-center h-1/2">
-        <p class="text-center text-3xl">no records available</p>
-    </div> -->
+
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="#017873" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Add
+                    {{selectedFilter | titlecase}} Kys Document</h2>
+            </div>
+
+            <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                <form [formGroup]="kycForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+
+                    <div hidden> <label for="email" class="block text-sm font-medium leading-6 text-gray-900">
+                            User Role
+                        </label>
+                        <div class="mt-2">
+                            <input id="userRole" formControlName="userRole" type="text"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green_ sm:text-sm sm:leading-6"
+                                [ngModel]='selectedFilter' required />
+
+                        </div>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium leading-6 text-gray-900">
+                            Document Title
+                        </label>
+                        <div class="mt-2">
+                            <input id="title" formControlName="title" type="text"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green_ sm:text-sm sm:leading-6"
+                                [ngClass]="{ 'ring-red-500': title?.invalid && title?.touched }"
+                                placeholder="Enter Document Title" required />
+                            <div *ngIf="title?.invalid && title?.touched" class="text-red-600 text-sm mt-1">
+                                <div *ngIf="title?.errors?.['required']">document title is required.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="kycStatus" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Select Kyc Status
+                        </label>
+                        <select id="status" formControlName="status"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green_ focus:border-green_ block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            [ngClass]="{ 'ring-red-500': status?.invalid && status?.touched }" required>
+                            <option value="" disabled selected>Choose a status</option>
+                            <option *ngFor="let stat of kycStatus" [value]="stat.name">{{ stat.title | uppercase }}
+                            </option>
+                        </select>
+                        <div *ngIf="status?.invalid && status?.touched" class="text-red-600 text-sm mt-1">
+                            <div *ngIf="status?.errors?.['required']">Please select a KYC status.</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="submit" [disabled]="kycForm.invalid"
+                            class="flex w-full justify-center rounded-md bg-yellow_  px-3 py-1.5 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            Add
+                        </button>
+                    </div>
+                </form>
+
+
+
+            </div>
+        </div>
+
+
+        <!-- updating kyc form -->
+        <div *ngIf="selectedFilter === 'CONFIGURATION'"
+            class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+            <div class="flex sm:mx-auto sm:w-full sm:max-w-sm gap-4">
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="#624DE3" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                </svg>
+                <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Edit
+                    {{selectedFilter | titlecase}} </h2>
+            </div>
+
+            <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                <form [formGroup]="updateKyc" (ngSubmit)="updateConfiguration()" class="space-y-6">
+
+
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium leading-6 text-gray-900">
+                            Configuration Type
+                        </label>
+                        <div class="mt-2">
+                            <input id="configurationType" formControlName="configurationType" type="text"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green_ sm:text-sm sm:leading-6"
+                                required />
+
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="percentageValue"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Percentange
+                        </label>
+
+                        <input id="percentageValue" formControlName="percentageValue" type="text"
+                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green_ sm:text-sm sm:leading-6"
+                            required />
+
+                    </div>
+
+                    <div>
+                        <button type="submit" [disabled]="updateKyc.invalid"
+                            class="flex w-full justify-center rounded-md bg-yellow_  px-3 py-1.5 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            Update
+                        </button>
+                    </div>
+                </form>
+
+
+
+            </div>
+        </div>

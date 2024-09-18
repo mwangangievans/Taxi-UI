@@ -4,19 +4,33 @@ import { addIcons } from 'ionicons';
 import { SafePipe } from '../../safe.pipe';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { LoaderComponent } from '../loader/loader.component';
+import { LoaderService } from '../../service/loader.service';
 
 @Component({
   selector: 'app-iframe-display',
   standalone: true,
-  imports: [SafePipe, CommonModule],
+  imports: [SafePipe, CommonModule, LoaderComponent],
   templateUrl: './iframe-display.component.html',
   styleUrl: './iframe-display.component.css',
 })
 export class IframeDisplayComponent {
+  isLoading: boolean = false;
+
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: { link: string; fileExtension: string }
-  ) {}
+    public data: { link: string; fileExtension: string },
+    private loaderService: LoaderService
+  ) {
+    const storedLink: { link: string; fileExtension: string } = JSON.parse(
+      localStorage.getItem('downLoadLink') || '{}'
+    );
+  }
+  ngOnInit() {
+    this.loaderService.loading$.subscribe((loading) => {
+      this.isLoading = loading;
+    });
+  }
 
   // @Input() link: string = '';
   // @Input() fileExtension: string = '';

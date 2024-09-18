@@ -27,7 +27,6 @@
     "@angular/ssr": "^17.2.1",
     "@ngneat/until-destroy": "^10.0.0",
     "@types/googlemaps": "^3.43.3",
-    "angular-datatables": "^18.0.0",
     "chart.js": "^4.4.3",
     "datatables": "^1.10.18",
     "express": "^4.18.2",

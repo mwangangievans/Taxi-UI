@@ -39,8 +39,6 @@ export class UserSessionService {
   }
 
   public storeUserDataAfterLoginSuccess(data: any): void {
-    console.log('login data....', data);
-
     // Save session data after login
     const session: UserSession = {
       userId: data.userId,
@@ -77,7 +75,6 @@ export class UserSessionService {
       refreshToken: this.getSession()?.refreshToken,
     };
 
-    console.log({ refreshPayload });
     debugger;
 
     // return this.http.post('auth/refresh', { refreshPayload }, { headers });

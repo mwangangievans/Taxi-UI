@@ -9,6 +9,11 @@ import { IframeDisplayComponent } from '../iframe-display/iframe-display.compone
 import { LoaderComponent } from '../loader/loader.component';
 import { LoaderService } from '../../service/loader.service';
 
+export interface Earnings {
+  totalEarnings: number;
+  totalCommission: number;
+}
+
 @Component({
   selector: 'app-reports',
   standalone: true,
@@ -29,12 +34,14 @@ export class ReportsComponent {
   totalearings: number = 0;
   totalCommission: number = 0;
   isLoading: boolean = false;
+  earningsAndCommission!: Earnings;
 
   ngOnInit() {
     this.loaderService.loading$.subscribe((loading) => {
       this.isLoading = loading;
     });
     this.getTransactions(this.currentPage, this.pageSize);
+    this.getEarningsAndCommission();
   }
 
   constructor(
@@ -49,7 +56,6 @@ export class ReportsComponent {
       page: pageIndex.toString(),
       size: pageSize.toString(),
     };
-    //        `user/admin?pageNumber=${params.page}&pageSize=${params.size}`,
 
     this.api
       .get<Transaction[]>(
@@ -59,19 +65,21 @@ export class ReportsComponent {
         next: (response) => {
           this.totalItems = response.length;
           this.Transactions = this.formatTransactions(response);
-
-          if (this.Transactions.length) {
-            this.totalearings = this.calculateTotalAmount(this.Transactions);
-            this.totalCommission = this.calculateTotalCommissions(
-              this.Transactions
-            );
-          }
-
-          console.log('Transactions', this.Transactions);
         },
         error: (error) => {},
         complete: () => {},
       });
+  }
+  getEarningsAndCommission() {
+    //http://46.101.104.128:7823/api/report/admin/earningsAndCommission
+
+    this.api.get<Earnings>(`report/admin/earningsAndCommission`).subscribe({
+      next: (response) => {
+        this.earningsAndCommission = response;
+      },
+      error: (error) => {},
+      complete: () => {},
+    });
   }
 
   onPageChange(pageIndex: number) {

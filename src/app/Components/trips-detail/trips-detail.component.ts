@@ -9,7 +9,6 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { TripCoordinate, tripInterface } from '../../model';
 import { HttpService } from '../../service/http.service';
 import { ActivatedRoute } from '@angular/router';
-import { log } from 'node:console';
 import { CommonModule } from '@angular/common';
 
 declare global {
@@ -18,6 +17,7 @@ declare global {
     initMap: () => void;
   }
 }
+
 interface Point {
   latitude: number;
   longitude: number;
@@ -32,7 +32,8 @@ interface Point {
 })
 export class TripsDetailComponent implements OnInit, AfterViewInit {
   isTripActive: boolean = false;
-  tripCoordinates: TripCoordinate[] | Point[] = [];
+  tripCoordinates: TripCoordinate[] = [];
+  markerCoodinates: Point[] = [];
   tripId: string = '';
 
   map!: google.maps.Map;
@@ -49,41 +50,6 @@ export class TripsDetailComponent implements OnInit, AfterViewInit {
     strokeWeight: 2,
   };
 
-  // coordinates = [
-  //   {
-  //     tripCoordinateId: 33,
-  //     tripId: 14,
-  //     coordinateContributorUserId: 2,
-  //     latitude: -4.0436,
-  //     longitude: 39.6682,
-  //     createdOn: 1725364864408,
-  //   },
-  //   {
-  //     tripCoordinateId: 34,
-  //     tripId: 14,
-  //     coordinateContributorUserId: 2,
-  //     latitude: -1.2864,
-  //     longitude: 36.8172,
-  //     createdOn: 1725364869387,
-  //   },
-  //   {
-  //     tripCoordinateId: 35,
-  //     tripId: 14,
-  //     coordinateContributorUserId: 2,
-  //     latitude: -1.3598,
-  //     longitude: 38.0354,
-  //     createdOn: 1725364869440,
-  //   },
-  //   {
-  //     tripCoordinateId: 36,
-  //     tripId: 14,
-  //     coordinateContributorUserId: 2,
-  //     latitude: -0.0917,
-  //     longitude: 34.768,
-  //     createdOn: 1725364874437,
-  //   },
-  // ];
-
   constructor(
     private api: HttpService,
     private _Activatedroute: ActivatedRoute
@@ -91,45 +57,52 @@ export class TripsDetailComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.tripId = this._Activatedroute.snapshot.paramMap.get('id') ?? '';
-    this.getTripCoordinates(this.tripId);
+    this.getTripById(this.tripId);
   }
 
   ngAfterViewInit(): void {
-    this.initializeMap();
+    this.initializeMap(this.tripCoordinates);
   }
 
-  initializeMap() {
+  initializeMap(cordinates: TripCoordinate[] | Point[]) {
     const mapOptions: google.maps.MapOptions = {
-      center: { lat: -0.0917, lng: 34.768 },
-      zoom: 4,
+      zoom: 8, // initial zoom level
     };
 
     this.map = new google.maps.Map(this.googlemaps.nativeElement, mapOptions);
 
-    // Plot polyline
-    // this.plotPolyline();
-
-    // Try to get user's current location and center the map there
     navigator.geolocation.getCurrentPosition((position) => {
       const center = {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       };
-      this.map.setCenter(center); // Set the map center to user's location
-      this.addMarker(center.lat, center.lng);
+      this.map.setCenter(center); // Set the map center to user's location (no marker here)
+
+      // Add markers with captions (labels)
+      const points: Point[] = cordinates;
+
+      // Add "Origin" marker
+      this.addMarker(points[0].latitude, points[0].longitude, 'Origin');
+
+      // Add "Destination" marker
+      this.addMarker(points[1].latitude, points[1].longitude, 'Destination');
     });
   }
 
-  addMarker(lat: number, lng: number) {
+  addMarker(lat: number, lng: number, label: string) {
     const marker = new google.maps.Marker({
       position: { lat, lng },
       map: this.map,
+      label: {
+        text: label,
+        color: '#000', // Optional: Set label color
+        fontSize: '16px', // Optional: Set label font size
+      },
     });
   }
 
-  plotPolyline(tripCoordinates: TripCoordinate[] | Point[]) {
-    // Convert the coordinates array into a path for the polyline
-    const path = this.tripCoordinates.map((coord) => ({
+  plotPolyline(tripCoordinates: TripCoordinate[]) {
+    const path = tripCoordinates.map((coord) => ({
       lat: coord.latitude,
       lng: coord.longitude,
     }));
@@ -141,6 +114,8 @@ export class TripsDetailComponent implements OnInit, AfterViewInit {
       strokeOpacity: this.polylineOptions.strokeOpacity,
       strokeWeight: this.polylineOptions.strokeWeight,
     });
+
+    console.log('polyline..', polyline);
 
     // Set the polyline on the map
     polyline.setMap(this.map);
@@ -164,34 +139,37 @@ export class TripsDetailComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (response) => {
           this.tripCoordinates = this.sortTripCoordinatesByTime(response);
+          // this.plotPolyline(this.tripCoordinates);
+          console.log(
+            'this.plotPolyline(this.tripCoordinates)',
+            this.tripCoordinates
+          );
+
           if (this.tripCoordinates.length) {
             this.plotPolyline(this.tripCoordinates);
+            this.initializeMap(this.markerCoodinates);
           } else {
-            this.getTripById(this.tripId);
+            // this.getTripById(this.tripId);
+            this.isTripActive = true;
           }
         },
         error: (error) => {
           console.error('Error fetching users:', error);
-          // Handle any errors here, such as showing an error message to the user
         },
-        complete: () => {
-          console.log('Completed the request to get users.');
-        },
+        complete: () => {},
       });
   }
+
   getTripById(tripId: string) {
     this.api
       .get<TripCoordinate[] | Point[]>(`trip?tripId=${tripId}`)
       .subscribe({
         next: (response) => {
-          this.tripCoordinates = this.transformTripArray(response);
-          console.log(
-            'this.tripCoordinates. kilimamboko...',
-            this.tripCoordinates
-          );
-          if (this.tripCoordinates.length) {
-            this.plotPolyline(this.tripCoordinates);
-            this.isTripActive = true;
+          this.markerCoodinates = this.transformTripArray(response);
+          this.initializeMap(this.markerCoodinates);
+
+          if (this.markerCoodinates.length) {
+            this.getTripCoordinates(this.tripId);
           } else {
             return;
           }
@@ -200,11 +178,10 @@ export class TripsDetailComponent implements OnInit, AfterViewInit {
           console.error('Error fetching users:', error);
           // Handle any errors here, such as showing an error message to the user
         },
-        complete: () => {
-          console.log('Completed the request to get users.');
-        },
+        complete: () => {},
       });
   }
+
   transformTripArray(trips: any[]): Point[] {
     return trips.flatMap((trip) => [
       { latitude: trip.startingPointLat, longitude: trip.startingPointLng },

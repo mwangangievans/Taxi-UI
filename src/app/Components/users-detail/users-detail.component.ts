@@ -15,41 +15,98 @@ import { TrancateWordsPipe } from '../../service/trancate-words.pipe';
 import { addIcons } from 'ionicons';
 import { MatDialog } from '@angular/material/dialog';
 import { IframeDisplayComponent } from '../iframe-display/iframe-display.component';
-
+import { LoaderService } from '../../service/loader.service';
+import { LoaderComponent } from '../loader/loader.component';
+import { SafePipe } from '../../safe.pipe';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 @Component({
   selector: 'app-users-detail',
   standalone: true,
-  imports: [CommonModule, TripsComponent, TrancateWordsPipe],
+  imports: [
+    CommonModule,
+    TripsComponent,
+    TrancateWordsPipe,
+    LoaderComponent,
+    IframeDisplayComponent,
+    SafePipe,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './users-detail.component.html',
   styleUrl: './users-detail.component.css',
 })
 export class UsersDetailComponent {
   userObject!: UserResponse;
   userKycDoc: UserKycDocument[] = [];
+  tripdata: tripInterface[] = [];
+  totalItems: number = 0; // Total number of users from the server
+  pageSize: number = 5; // Number of users per page
+  currentPage: number = 0; // The current page number
   userProfile!: userProfile;
   downLoadLink!: FileLink;
-  tripdata!: tripInterface[];
   display_name!: string;
   dynamicProfileUrl!: string;
   rating: number = this.calculateRating();
-
+  isLoading: boolean = false;
+  activeTab: 1 | 2 = 1;
+  singleDocument!: UserKycDocument;
   userId: string = '';
+  verifykycForm: FormGroup;
 
   constructor(
     private api: HttpService,
     private notify: NotificationService,
     private _Activatedroute: ActivatedRoute,
     private router: Router,
-    private dialog: MatDialog
-  ) {}
+    private dialog: MatDialog,
+    private loaderService: LoaderService,
+    private fb: FormBuilder
+  ) {
+    this.isLoading = true;
+
+    this.verifykycForm = this.fb.group({
+      userKycDocumentId: ['', [Validators.required]],
+      rejectionReason: ['', [Validators.required]],
+      kycVerificationStatus: ['', Validators.required],
+    });
+    this.verifykycForm.get('rejectionReason')?.disable();
+  }
+
+  showRejectionReason: boolean = false;
+  kycStatus = [
+    { name: 'ACCEPTED', title: 'ACCEPTED' },
+    { name: 'PENDING', title: 'PENDING' },
+    { name: 'REJECTED', title: 'REJECTED' },
+  ];
+
+  get userKycDocumentId() {
+    return this.verifykycForm.get('userKycDocumentId');
+  }
+
+  get rejectionReason() {
+    return this.verifykycForm.get('rejectionReason');
+  }
+
+  get kycVerificationStatus() {
+    return this.verifykycForm.get('kycVerificationStatus');
+  }
 
   ngOnInit() {
     this.userId = this._Activatedroute.snapshot.paramMap.get('id') ?? '';
     if (this.userId) {
       this.getUserDetails(this.userId);
       this.getUserKycDocs(this.userId);
-      this.getTrips('', this.userId);
+      this.getTrips('', this.userId, this.currentPage, this.pageSize);
     }
+    this.loaderService.loading$.subscribe((loading) => {
+      this.isLoading = loading;
+    });
   }
   filters = [
     { id: 1, name: 'UPCOMING', active: true },
@@ -61,7 +118,9 @@ export class UsersDetailComponent {
     this.api.get<UserResponse>(`user/${this.userId}`).subscribe({
       next: (response) => {
         this.userObject = response;
-        this.getProfilePic(this.userObject.userProfile.profilePicFileId);
+        if (this.userObject.userProfile.profilePicFileId) {
+          this.getProfilePic(this.userObject.userProfile.profilePicFileId);
+        }
         if (this.userObject.user.roles[0] === 'DRIVER') {
           this.getUserDeatilsByRole(
             'user/driverDetails?driverUserId',
@@ -70,11 +129,10 @@ export class UsersDetailComponent {
         }
         if (this.userObject.user.roles[0] === 'CUSTOMER') {
           this.getUserDeatilsByRole(
-            'customerDetails?customerUserId',
+            'user/customerDetails?customerUserId',
             this.userId
           );
         }
-        console.log('User data retrieved:', response);
         // You can process the response here, e.g., update the state or UI
       },
       error: (error) => {
@@ -82,17 +140,28 @@ export class UsersDetailComponent {
         // Handle any errors here, such as showing an error message to the user
       },
       complete: () => {
-        console.log('Completed the request to get users.');
         // Optional: Execute any additional code after the request completes
       },
     });
+  }
+
+  showReasonForRejectionInput(event: any): void {
+    const selectedStatus = event.target.value;
+
+    // Check if the selected status is 'REJECTED'
+    if (selectedStatus === 'REJECTED') {
+      this.showRejectionReason = true;
+      this.verifykycForm.get('rejectionReason')?.enable();
+    } else {
+      this.showRejectionReason = false;
+      this.verifykycForm.get('rejectionReason')?.disable();
+    }
   }
   getUserDeatilsByRole(route: string, userId: string) {
     this.api.get<userProfile>(`${route}=${this.userId}`).subscribe({
       next: (response) => {
         this.userProfile = response;
 
-        console.log('User data retrieved:', response);
         // You can process the response here, e.g., update the state or UI
       },
       error: (error) => {
@@ -100,7 +169,6 @@ export class UsersDetailComponent {
         // Handle any errors here, such as showing an error message to the user
       },
       complete: () => {
-        console.log('Completed the request to get users.');
         // Optional: Execute any additional code after the request completes
       },
     });
@@ -111,31 +179,26 @@ export class UsersDetailComponent {
       .subscribe({
         next: (response) => {
           this.userKycDoc = response;
-          console.log(
-            'User data  kyc...docs this.userKycDoc:',
-            this.userKycDoc
-          );
         },
         error: (error) => {
           console.error('Error fetching users:', error);
         },
-        complete: () => {
-          console.log('Completed the request to get users.');
-        },
+        complete: () => {},
       });
   }
-  downloadKycDoc(fileId: string) {
+  downloadKycDoc(fileId: string, document: UserKycDocument) {
     this.api.get<FileLink>(`user/fileLink?fileId=${fileId}`).subscribe({
       next: (response) => {
+        const newLocal = 'hello..';
+
+        this.singleDocument = document;
         this.downLoadLink = response;
-        this.openDialog(this.downLoadLink);
+        this.activeTab = 2;
       },
       error: (error) => {
         console.error('Error fetching users:', error);
       },
-      complete: () => {
-        console.log('Completed the request to get users.');
-      },
+      complete: () => {},
     });
   }
   getProfilePic(picUrl: string) {
@@ -147,9 +210,7 @@ export class UsersDetailComponent {
       error: (error) => {
         console.error('Error fetching users:', error);
       },
-      complete: () => {
-        console.log('Completed the request to get users.');
-      },
+      complete: () => {},
     });
   }
   updateFilter(index: number, filter: string) {
@@ -157,31 +218,56 @@ export class UsersDetailComponent {
       ...filter,
       active: i === index,
     }));
+    this.currentPage = 0;
 
-    this.getTrips(filter, this.userId);
+    this.getTrips(filter, this.userId, this.currentPage, this.pageSize);
   }
 
-  getTrips(filter: string, userId: string) {
-    // http://46.101.104.128:7823/api/trip?tripCompletionStatus=UPCOMING&driverUserId=2
+  getTrips(
+    filter: string,
+    userId: string,
+    pageIndex: number,
+    pageSize: number
+  ) {
+    const params = {
+      kycVerificationStatus: filter,
+      page: pageIndex.toString(),
+      size: pageSize.toString(),
+    };
     this.api
       .get<tripInterface[]>(
-        `trip?tripCompletionStatus=${filter}&driverUserId=${userId}`
+        `trip?tripCompletionStatus=${filter}&driverUserId=${userId}&pageNumber=${params.page}&pageSize=${params.size}`
       )
       .subscribe({
         next: (response) => {
+          this.tripdata = [];
           this.tripdata = response.reverse();
-          // You can process the response here, e.g., update the state or UI
+          this.totalItems = response.length;
         },
         error: (error) => {
           console.error('comming soon:', error);
           this.tripdata = [];
         },
-        complete: () => {
-          console.log('Completed the request to get users.');
-          // Optional: Execute any additional code after the request completes
-        },
+        complete: () => {},
       });
   }
+
+  onSubmit() {
+    if (this.verifykycForm.valid) {
+      this.api.post(`user/kyc/verify`, this.verifykycForm.value).subscribe({
+        next: (response) => {
+          this.getUserKycDocs(this.userId);
+          this.activeTab = 1;
+        },
+        error: (error) => {
+          console.error('Error fetching users:', error);
+        },
+        complete: () => {},
+      });
+    } else {
+    }
+  }
+
   getPlaceName(startPointReverseGeoCoordinatesResponse: string): string {
     try {
       // Parse the JSON string into an object
@@ -211,5 +297,12 @@ export class UsersDetailComponent {
       // width: '80%',
       height: '80%',
     });
+  }
+  onPageChange(pageIndex: number) {
+    this.currentPage = pageIndex;
+    this.getTrips('', this.userId, this.currentPage, this.pageSize);
+  }
+  updateActiveTab(tab: any) {
+    this.activeTab = tab;
   }
 }

@@ -27,6 +27,7 @@ import { LoaderComponent } from '../loader/loader.component';
 export class TripsComponent {
   display_name!: string;
   isLoading: boolean = false;
+  filter: string = '';
 
   tripdata: tripInterface[] = [];
   totalItems: number = 0; // Total number of users from the server
@@ -48,6 +49,8 @@ export class TripsComponent {
     this.isLoading = true;
   }
   getTrips(filter: string, pageIndex: number, pageSize: number) {
+    console.log('yes..filters', filter);
+
     const params = {
       kycVerificationStatus: filter,
       page: pageIndex.toString(),
@@ -68,16 +71,13 @@ export class TripsComponent {
           console.error('comming soon:', error);
           this.tripdata = [];
         },
-        complete: () => {
-          console.log('Completed the request to get users.');
-          // Optional: Execute any additional code after the request completes
-        },
+        complete: () => {},
       });
   }
 
   onPageChange(pageIndex: number) {
     this.currentPage = pageIndex;
-    this.getTrips('', this.currentPage, this.pageSize);
+    this.getTrips(this.filter, this.currentPage, this.pageSize);
   }
 
   filters = [
@@ -88,13 +88,14 @@ export class TripsComponent {
   chart: any = [];
 
   updateFilter(index: number, filter: string) {
+    this.filter = filter;
     this.filters = this.filters.map((filter, i) => ({
       ...filter,
       active: i === index,
     }));
     this.currentPage = 0;
 
-    this.getTrips('', this.currentPage, this.pageSize);
+    this.getTrips(this.filter, this.currentPage, this.pageSize);
   }
 
   getPlaceName(startPointReverseGeoCoordinatesResponse: string): string {

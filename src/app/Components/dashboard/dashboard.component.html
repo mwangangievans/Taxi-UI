@@ -1,5 +1,7 @@
-<div class="overflow-auto h-[80vh] scrollbar-hide">
-    <div class="grid grid-cols-4 gap-12 ">
+<!-- <div class="overflow-auto h-[80vh] scrollbar-hide"> -->
+<div class="overflow-auto md:h-[80vh] scrollbar-hide   _radius  flex-1 flex flex-col h-screen w-full">
+
+    <div class="grid md:grid-cols-4 grid-cols-2 md:gap-12  gap-4">
         <div
             class="max-w-sm  p-4 bg-white border-2 border-green_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans">
             <p class="mb-3  text-xl font-bold text-gray-700 dark:text-gray-400">
@@ -32,9 +34,10 @@
 
 
     </div>
+
     <div class="my-12 w-full h-1/2 bg-white _radius py-6">
         <div class=" !flex justify-between hidden mx-12   md:block md:w-auto " id="navbar-dropdown">
-            <div>
+            <!-- <div>
                 <ul
                     class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-green_lighter rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
                     <li>
@@ -45,7 +48,6 @@
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                     stroke-width="2" d="m1 1 4 4 4-4" />
                             </svg></button>
-                        <!-- Dropdown menu -->
                         <div id="dropdownNavbar"
                             class="z-10 hidden font-normal bg-white divide-y divide-green_lighter rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                             <ul class="py-2 text-sm text-gray-700 dark:text-gray-400"
@@ -69,11 +71,11 @@
 
 
                 </ul>
-            </div>
+            </div> -->
 
             <div class="">
                 <div class="rounded-lg border border-gray-300 bg-green_ px-2">
-                    <nav class="flex flex-wrap gap-4">
+                    <nav class="flex md:flex-wrap gap-4">
                         <a *ngFor="let stat of filters; let i = index" (click)="onFilterClick(stat.title)"
                             class="whitespace-nowrap cursor-pointer inline-flex rounded-lg py-1 px-3 text-sm text-white_ font-medium transition-all duration-200 ease-in-out"
                             [ngClass]="{

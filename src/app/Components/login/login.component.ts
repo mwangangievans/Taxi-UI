@@ -10,16 +10,18 @@ import { NotificationService } from '../../service/notification.service';
 import { HttpService } from '../../service/http.service';
 import { UserSessionService } from '../../service/user-session.service';
 import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule],
+  imports: [ReactiveFormsModule, HttpClientModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   loginForm!: FormGroup;
+  passwordVisible: boolean = false; // Toggle state for password visibility
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -35,26 +37,23 @@ export class LoginComponent {
   }
 
   login(): void {
-    console.log(this.loginForm.value);
-
     if (this.loginForm.invalid) {
       return;
     }
     this.api.postWithoutToken('auth/login', this.loginForm.value).subscribe({
       next: (res) => {
-        console.log('this is res...', res);
-
         this.sessionService.storeUserDataAfterLoginSuccess(res);
         this.router.navigate(['home']);
       },
       error: (err) => {
-        console.log('this is erro....', err.errors.message);
-
         this.notify.showError(`${err.message}`, 'error');
       },
-      complete: () => {
-        console.log('Login request completed');
-      },
+      complete: () => {},
     });
+  }
+
+  // Toggle password visibility
+  togglePasswordVisibility(): void {
+    this.passwordVisible = !this.passwordVisible;
   }
 }

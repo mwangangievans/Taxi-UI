@@ -30,6 +30,8 @@ export const routes: Routes = [
       { path: 'doc/:id', component: IframeDisplayComponent },
       { path: 'users/:id', component: UsersDetailComponent },
       { path: 'trips/:id', component: TripsDetailComponent },
+      ///home/users/2
+      //home/dashboard/2
     ],
   },
 ];

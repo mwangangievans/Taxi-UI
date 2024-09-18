@@ -3,18 +3,18 @@ import { HttpService } from '../../service/http.service';
 import { NotificationService } from '../../service/notification.service';
 import { error } from 'console';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { userInterface } from '../../model';
 import { addIcons } from 'ionicons';
 import { HttpClient } from '@angular/common/http';
-import { DynamicTableComponent } from '../dynamic-table/dynamic-table.component';
 import { LoaderService } from '../../service/loader.service';
 import { LoaderComponent } from '../loader/loader.component';
+import { HelperService } from '../../service/helper.service';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, RouterModule, DynamicTableComponent, LoaderComponent],
+  imports: [CommonModule, RouterModule, LoaderComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
 })
@@ -42,7 +42,9 @@ export class UsersComponent {
     private _httpClient: HttpClient,
     private api: HttpService,
     private notify: NotificationService,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private route: ActivatedRoute,
+    public helper: HelperService
   ) {
     this.isLoading = true;
   }
@@ -74,14 +76,14 @@ export class UsersComponent {
         error: (error) => {
           console.error('Error fetching users:', error);
         },
-        complete: () => {
-          console.log('Completed the request to get users.');
-        },
+        complete: () => {},
       });
   }
 
   onPageChange(pageIndex: number) {
     this.currentPage = pageIndex;
+    console.log('totalItems', this.totalItems, 'currentPage', this.currentPage);
+
     this.getUsers('', this.currentPage, this.pageSize);
   }
   filters = [

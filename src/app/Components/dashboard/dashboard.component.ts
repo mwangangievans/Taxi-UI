@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { UsersComponent } from '../users/users.component';
 import { HttpService } from '../../service/http.service';
 import { addIcons } from 'ionicons';
+import { HelperService } from '../../service/helper.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -46,14 +47,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   loadGraphData(filter: string) {
     this.dataService.getGraphData(filter).subscribe({
       next: (data) => {
-        console.log({ filter }, { data });
-
         switch (filter) {
           case 'Daily':
             this.dailyData = data;
             break;
           case 'Weekly':
             this.weeklyData = data;
+
             break;
           case 'Monthly':
             this.monthlyData = data;
@@ -101,17 +101,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.api.get<Statistics>(`report/admin/dashboard/stats`).subscribe({
       next: (response) => {
         this.statistics = response;
-        console.log('User data retrieved:', response);
-        // You can process the response here, e.g., update the state or UI
       },
       error: (error) => {
         console.error('Error fetching users:', error);
-        // Handle any errors here, such as showing an error message to the user
       },
-      complete: () => {
-        console.log('Completed the request to get users.');
-        // Optional: Execute any additional code after the request completes
-      },
+      complete: () => {},
     });
   }
 }

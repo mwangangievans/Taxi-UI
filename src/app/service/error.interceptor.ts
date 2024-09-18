@@ -25,6 +25,8 @@ export const ErrorInterceptor = (
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
+      console.log('Client-side error:,', error.error.message);
+
       let errorMessage = '';
 
       if (error.error instanceof ErrorEvent) {
@@ -32,12 +34,12 @@ export const ErrorInterceptor = (
         errorMessage = `Client-side error: ${error.error.message}`;
       } else {
         // Server-side error
-        errorMessage = `Server-side error: ${error.status} ${error.message}`;
+        // errorMessage = `Server-side error: ${error.status} ${error.error.message}`;
+        errorMessage = `${error.status} ${error.error.message}`;
       }
 
       // Log the error or send it to a remote logging infrastructure
       console.error(errorMessage);
-      // console.log('Request URL:', req.url);
 
       // Handle specific HTTP errors
       if (error.status === 401) {
@@ -103,11 +105,6 @@ const handle401Error = (
         return next(clonedRequest);
       }),
       catchError((err) => {
-        // If refreshing fails, log out the user and redirect to the login page
-        // userSessionService.logout();
-        // router.navigate(['/login']);
-        console.log('refresh failed....');
-
         return throwError(
           () => new Error('Session expired, please log in again.')
         );

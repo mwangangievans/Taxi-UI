@@ -1,5 +1,9 @@
-<div class="h-[80vh] _radius flex justify-between gap-4">
-    <div class="w-1/4 mx-4 bg-white _radius p-2">
+<!-- <div class="h-[80vh] _radius flex justify-between gap-4"*ngIf="activeTab === 1" > -->
+<div class="overflow-auto md:h-[80vh] scrollbar-hide   _radius  flex-1 md:flex md:justify-between  h-screen w-full  "
+    *ngIf="activeTab === 1">
+
+
+    <div class="md:w-1/4 md:mx-4 w-full bg-white _radius md:p-2 p-1 my-4">
         <div class="max-w-sm mx-auto bg-white srounded-lg overflow-hidden my-4 p-6">
 
             <div class="flex justify-center">
@@ -50,26 +54,29 @@
     </div>
 
 
-    <div class="w-3/4 mx-4 bg-white _radius p-2 overflow-auto scrollbar-hide h-full">
-        <h3 class="text-teal-600 text-lg font-semibold mb-4 p-4">KYC Documents</h3>
+    <div class="md:w-3/4  w-full md:mx-4 md:bg-white _radius p-2 overflow-auto scrollbar-hide h-full">
 
-        <div class=" mx-auto bg-white rounded-lg    my-4 p-6">
+        <div class=" ">
+            <div class="relative overflow-x-auto  md:mx-auto bg-white rounded-lg   my-6 p-6">
+                <h3 class="text-teal-600 text-lg font-semibold mb-4 p-4">KYC Documents</h3>
 
-            <div class="mb-6">
-                <table *ngIf="userKycDoc.length" class="w-full text-sm text-left text-gray-500">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
 
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
-                            <th scope="col" class="px-6 py-3">Document number</th>
-                            <th scope="col" class="px-6 py-3">Document name</th>
-                            <th scope="col" class="px-6 py-3">Verification Status</th>
+                            <th scope="col" class="px-6 py-3 whitespace-nowrap">Document number</th>
+                            <th scope="col" class="px-6 py-3 whitespace-nowrap">Document name</th>
+                            <th scope="col" class="px-6 py-3 whitespace-nowrap">Verification Status</th>
+                            <th scope="col" class="px-6 py-3 whitespace-nowrap">CANCELLETION REASON </th>
+
+
                         </tr>
                     </thead>
                     <tbody>
 
                         <tr *ngFor="let document of userKycDoc" class="bg-white border-b">
-                            <td class="px-6 py-4 text-green_ cursor-pointer relative group"
-                                (click)="downloadKycDoc(document.fileId)">
+                            <td class="px-6 py-4 text-green_ cursor-pointer relative group whitespace-nowrap"
+                                (click)="downloadKycDoc(document.fileId ,document)">
                                 {{ document.documentNumber }}
                                 <div
                                     class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2 whitespace-no-wrap z-2">
@@ -77,24 +84,55 @@
                                 </div>
                             </td>
 
-                            <td class="px-6 py-4 flex items-center">
+                            <td class="px-6 py-4 flex items-center whitespace-nowrap">
                                 <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FBBE4B"
+                                    *ngIf="document.verificationStatus === 'PENDING'" xmlns="http://www.w3.org/2000/svg"
+                                    width="24" height="24" fill="#FBBE4B" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd"
+                                        d="M9 2.221V7H4.221a2 2 0 0 1 .365-.5L8.5 2.586A2 2 0 0 1 9 2.22ZM11 2v5a2 2 0 0 1-2 2H4v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-7Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+
+                                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                    *ngIf="document.verificationStatus === 'ACCEPTED'"
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#017873"
                                     viewBox="0 0 24 24">
                                     <path fill-rule="evenodd"
                                         d="M9 2.221V7H4.221a2 2 0 0 1 .365-.5L8.5 2.586A2 2 0 0 1 9 2.22ZM11 2v5a2 2 0 0 1-2 2H4v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-7Z"
                                         clip-rule="evenodd" />
                                 </svg>
+                                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                    *ngIf="document.verificationStatus === 'REJECTED'"
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FF0000"
+                                    viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd"
+                                        d="M9 2.221V7H4.221a2 2 0 0 1 .365-.5L8.5 2.586A2 2 0 0 1 9 2.22ZM11 2v5a2 2 0 0 1-2 2H4v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-7Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+
                                 <span class="px-2">{{
                                     document.kycConfigDocumentTitle }}</span>
 
                             </td>
 
 
-                            <td class="px-6 py-4">
-                                <span class="bg-yellow_ text-white_ py-1 px-3 rounded-full text-xs">{{
-                                    document.verificationStatus | titlecase }}</span>
+                            <td class="px-6 py-4 text-white whitespace-nowrap">
+                                <span [ngClass]="{
+                                    'bg-yellow_  ': document.verificationStatus === 'PENDING',
+                                    'bg-[#FF0000] ': document.verificationStatus === 'REJECTED',
+                                    'bg-green_': document.verificationStatus === 'ACCEPTED'
+                                }" class="py-1 px-3 rounded-full text-xs">
+                                    {{ document.verificationStatus | titlecase }}
+                                </span>
                             </td>
+
+                            <td class="px-6 py-4 text-[#FF0000]">
+                                <span class="py-1 px-3 rounded-full text-xs whitespace-nowrap">
+                                    {{ document.rejectionReason | titlecase }}
+                                </span>
+                            </td>
+
+
                         </tr>
                     </tbody>
                 </table>
@@ -106,13 +144,14 @@
 
             </div>
 
-            <h3 class="text-teal-600 text-lg font-semibold mb-4">Trips </h3>
 
-            <div class="">
+
+            <div class=" md:mx-auto bg-white rounded-lg  my-4 p-6">
+                <h3 class="text-teal-600 text-lg font-semibold mb-4">Trips </h3>
                 <div class="w-full justify-start pt-8">
                     <div class="">
                         <div class=" border-b-2 border-gray_    px-2">
-                            <nav class="flex flex-wrap gap-4">
+                            <nav class="flex md:flex-wrap md:gap-4 md:justify-start justify-between">
                                 <a *ngFor="let stat of filters; let i = index" (click)="updateFilter(i,stat.name)"
                                     class="whitespace-nowrap cursor-pointer inline-flex  py-1 px-3 text-sm text-gray font-medium transition-all duration-200 ease-in-out"
                                     [ngClass]="{
@@ -130,13 +169,13 @@
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                <th scope="col" class="px-6 py-3">Departure Time</th>
-                                <th scope="col" class="px-6 py-3">Driver</th>
-                                <th scope="col" class="px-6 py-3">No of Passagers</th>
-                                <th scope="col" class="px-6 py-3 ">price per seat</th>
-                                <th scope="col" class="px-6 py-3">From</th>
-                                <th scope="col" class="px-6 py-3">To </th>
-                                <th scope="col" class="px-6 py-3">Approval Status </th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Departure Time</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Driver</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">No of Passagers</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">price per seat</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">From</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">To </th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Approval Status </th>
 
 
                             </tr>
@@ -144,20 +183,20 @@
                         <tbody>
                             <tr *ngFor="let row of tripdata"
                                 [ngClass]="{'odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700': true}">
-                                <td scope="row" class="font-medium text-gray-900  dark:text-white">
+                                <td scope="row" class="font-medium text-gray-900  dark:text-white whitespace-nowrap">
                                     {{ row.departureTime | date:'EEEE, MMMM d, y' }} </td>
 
-                                <td class="px-6 py-4 ">{{ row.driverName }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ row.driverName }}</td>
 
-                                <td class="px-6 py-0 ">{{ row.numberOfSeats }}</td>
-                                <td class="">{{ row.pricePerSeat | currency: 'KSH ' : 'symbol' : ''
+                                <td class="px-6 py-0 whitespace-nowrap">{{ row.numberOfSeats }}</td>
+                                <td class="whitespace-nowrap">{{ row.pricePerSeat | currency: 'KSH ' : 'symbol' : ''
                                     }}</td>
-                                <td>
+                                <td class="whitespace-nowrap">
 
 
                                     {{ getPlaceName(row.startPointReverseGeoCoordinatesResponse) | trancateWords:20 }}
                                 </td>
-                                <td>
+                                <td class="whitespace-nowrap">
 
 
                                     {{ getPlaceName(row.destinationReverseGeoCoordinatesResponse) | trancateWords:20 }}
@@ -166,12 +205,12 @@
 
                                 <td class="px-6 py-4 flex">
                                     <button *ngIf="row.tripApprovalStatus === 'DRIVER_APPROVAL'" type="button"
-                                        class="flex text-nowrap items-center text-white bg-yellow_ hover:bg-yellow_ focus:ring-0 focus:ring-none font-medium _radius text-sm px-6 py-1 me-2 mb-2">
+                                        class="flex whitespace-nowrap text-nowrap items-center text-white bg-yellow_ hover:bg-yellow_ focus:ring-0 focus:ring-none font-medium _radius text-sm px-6 py-1 me-2 mb-2">
 
                                         Driver Approval
                                     </button>
                                     <button *ngIf="row.tripApprovalStatus === 'AUTO_APPROVE'" type="button"
-                                        class="flex items-center text-nowrap text-green-800 bg-green-200 hover:bg-green-300 focus:ring-0 focus:ring-none font-medium _radius text-sm px-6 py-1 me-2 mb-2">
+                                        class="flex whitespace-nowrap items-center text-nowrap text-green-800 bg-green-200 hover:bg-green-300 focus:ring-0 focus:ring-none font-medium _radius text-sm px-6 py-1 me-2 mb-2">
 
                                         Auto Approval
                                     </button>
@@ -180,6 +219,21 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                <div *ngIf="tripdata.length " class="flex gap-4 items-center mt-4 mx-12">
+                    <button class="px-4 py-2 bg-gray-300 text-gray-900 rounded" [disabled]="currentPage === 0"
+                        (click)="onPageChange(currentPage - 1)">
+                        Previous
+                    </button>
+
+                    <span>Page {{ currentPage + 1 }} of {{ totalItems }}</span>
+
+                    <button class="px-4 py-2 bg-gray-300 text-gray-900 rounded"
+                        [disabled]="currentPage == totalItems || currentPage > totalItems"
+                        (click)="onPageChange(currentPage + 1)">
+                        Next
+                    </button>
                 </div>
 
 
@@ -194,6 +248,182 @@
 
 
     </div>
+
+
+
+</div>
+<app-loader *ngIf="isLoading"></app-loader>
+
+
+<!-- <div class="h-[80vh] _radius flex justify-between gap-4" *ngIf="activeTab === 2"> -->
+<div class="overflow-auto md:h-[80vh] scrollbar-hide   _radius  flex-1 md:flex md:justify-between  h-screen w-full  "
+    *ngIf="activeTab === 2">
+
+
+
+    <div
+        class="flex flex-col items-center  border border-gray-200 rounded-lg  md:flex-row w-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+
+        <div class="md:w-3/4 w-full block md:hidden  overflow-auto scrollbar-hide h-full">
+
+
+            <div mat-dialog-content class=" flex items-center justify-center p-4">
+                <div *ngIf="downLoadLink.fileExtension === 'jpg' || downLoadLink.fileExtension === 'png' || downLoadLink.fileExtension === 'jpeg' || downLoadLink.fileExtension === ''"
+                    class="flex items-center justify-center w-full h-full">
+                    <img [src]="downLoadLink.link" alt="Image" class="w-full max-h-full object-contain">
+                </div>
+                <div *ngIf="downLoadLink.fileExtension === 'pdf'"
+                    class="w-full h-full flex items-center justify-center">
+                    <iframe [src]="downLoadLink.link | safe: 'resourceUrl'" class="w-full h-full border-none"></iframe>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="md:w-1/4 w-full flex flex-col  p-4 leading-normal bg-white shadow h-full">
+            <div class=" cursor-pointer cursor-pointer" (click)="updateActiveTab(1)">
+                <svg class="w-8 h-8  text-[#FF0000] dark:text-white " aria-hidden="true" (click)="updateActiveTab(1)"
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M6 18 17.94 6M18 18 6.06 6" />
+                </svg>
+
+
+            </div>
+
+            <div class="mt-12">
+
+
+
+
+                <div class="mt-4  justify-between w-full">
+                    <p class="text-green_">Doc Number: <span
+                            class="px-2 text-black">{{singleDocument.documentNumber}}</span></p>
+                </div>
+                <div class="mt-4  justify-between w-full">
+                    <p class="text-green_">Doc Title: <span
+                            class="px-2 text-black">{{singleDocument.kycConfigDocumentTitle}}</span></p>
+                </div>
+                <div class="mt-4  justify-between w-full">
+                    <p class="text-green_ ">Verification Status:
+                        <span [ngClass]="{
+                            'bg-yellow_  ': singleDocument.verificationStatus === 'PENDING',
+                            'bg-[#FF0000] ': singleDocument.verificationStatus === 'REJECTED',
+                            'bg-green_': singleDocument.verificationStatus === 'ACCEPTED'
+                        }" class=" text-white_ py-1 px-4 mx-4 rounded-full text-xs">{{
+                            singleDocument.verificationStatus | titlecase }}</span>
+                    </p>
+                </div>
+                <div *ngIf="singleDocument?.rejectionReason" class="mt-4 justify-between w-full">
+                    <p class="text-green_">Rejection reason:
+                        <span class="px-2 text-[#FF0000]">{{ singleDocument.rejectionReason }}</span>
+                    </p>
+                </div>
+
+
+
+                <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm  p-4">
+
+
+
+
+
+                    <form [formGroup]="verifykycForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+                        <div hidden>
+                            <label for="userKycDocumentId" class="block text-sm font-medium leading-6 text-gray-900">
+                                Document Id
+                            </label>
+                            <div class="mt-2">
+                                <input id="userKycDocumentId" formControlName="userKycDocumentId" type="text"
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green_ sm:text-sm sm:leading-6"
+                                    [ngModel]='singleDocument.userKycDocumentId' required />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="kycStatus" class="block mb-4 text-sm font-medium text-gray-900 dark:text-white">
+                                Update the status of the document
+                            </label>
+                            <select (change)="showReasonForRejectionInput($event)" id="status"
+                                formControlName="kycVerificationStatus"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green_ focus:border-green_ block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                [ngClass]="{ 'ring-red-500': kycVerificationStatus?.invalid && kycVerificationStatus?.touched }"
+                                required>
+                                <option value="" disabled selected>------</option>
+                                <option *ngFor="let stat of kycStatus" [value]="stat.name">{{ stat.title | uppercase
+                                    }}</option>
+                            </select>
+                            <div *ngIf="kycVerificationStatus?.invalid && kycVerificationStatus?.touched"
+                                class="text-red-600 text-sm mt-1">
+                                <div *ngIf="kycVerificationStatus?.errors?.['required']">Please select a KYC status.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- This div will be hidden/shown based on status selection -->
+                        <div *ngIf="showRejectionReason">
+                            <label for="rejectionReason" class="block text-sm font-medium leading-6 text-gray-900">
+                                Reason for Rejection
+                            </label>
+                            <div class="mt-2">
+                                <textarea id="rejectionReason" formControlName="rejectionReason" rows="4"
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green_ sm:text-sm sm:leading-6"
+                                    [ngClass]="{ 'ring-red-500': rejectionReason?.invalid && rejectionReason?.touched }"
+                                    placeholder="Enter Reason for Rejection" required></textarea>
+                                <div *ngIf="rejectionReason?.invalid && rejectionReason?.touched"
+                                    class="text-red-600 text-sm mt-1">
+                                    <div *ngIf="rejectionReason?.errors?.['required']">Reason for Rejection is
+                                        required.
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div>
+                            <button type="submit" [disabled]="verifykycForm.invalid"
+                                class="flex w-full justify-center rounded-md bg-yellow_ px-3 py-1.5 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                Verify
+                            </button>
+                        </div>
+
+                    </form>
+
+
+
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+        <div class="md:w-3/4 w-full hidden md:block  overflow-auto scrollbar-hide h-full">
+
+
+            <div mat-dialog-content class=" flex items-center justify-center p-4">
+                <div *ngIf="downLoadLink.fileExtension === 'jpg' || downLoadLink.fileExtension === 'png' || downLoadLink.fileExtension === 'jpeg' || downLoadLink.fileExtension === ''"
+                    class="flex items-center justify-center w-full h-full">
+                    <img [src]="downLoadLink.link" alt="Image" class="w-full max-h-full object-contain">
+                </div>
+                <div *ngIf="downLoadLink.fileExtension === 'pdf'"
+                    class="w-full h-full flex items-center justify-center">
+                    <iframe [src]="downLoadLink.link | safe: 'resourceUrl'" class="w-full h-full border-none"></iframe>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
 
 
 </div>

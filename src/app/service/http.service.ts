@@ -4,7 +4,7 @@ import { StorageService } from './storage.service';
 import { environment } from '../../environments/environment';
 import { UserSessionService } from './user-session.service';
 import { UserSession } from '../model';
-import { catchError, Observable, of } from 'rxjs';
+import { catchError, Observable, of, tap } from 'rxjs';
 import { Location } from '@angular/common';
 import { NotificationService } from './notification.service';
 
@@ -24,10 +24,11 @@ export class HttpService {
 
   private getHeaders(): HttpHeaders {
     const token = this.userSessionService.getSession()?.accessToken;
+
     return new HttpHeaders({
-      Accept: 'application/json',
+      Accept: '*/*',
       'Content-Type': 'application/json',
-      Authorization: token ? `Bearer ${token}` : '',
+      Authorization: `Bearer ${token}`,
     });
   }
 
@@ -43,7 +44,19 @@ export class HttpService {
       .pipe(
         catchError((error) => {
           this.handleError('Error fetching data.', error);
-          return of(([] || {} || '') as T); // Returning an empty array or object in case of error
+          return of(([] || {} || '') as T);
+        })
+      );
+  }
+  patch(route: string, payload?: any): Observable<any> {
+    return this.http
+      .patch<any>(`${baseUrl}${route}`, payload, {
+        headers: this.getHeaders(),
+      })
+      .pipe(
+        catchError((error) => {
+          this.handleError('Error updating data.', error);
+          return of(([] || {} || '') as any);
         })
       );
   }
@@ -53,10 +66,21 @@ export class HttpService {
   }
 
   post(route: string, payload?: any): Observable<any> {
-    console.log({ payload });
-    return this.http.post<any>(`${baseUrl}${route}`, payload, {
-      headers: this.getHeaders(),
-    });
+    return this.http
+      .post<any>(`${baseUrl}${route}`, payload, {
+        headers: this.getHeaders(),
+      })
+      .pipe(
+        tap({
+          next: (response) => {
+            this.notify.showSuccess('Record created successfully!', 'Success');
+          },
+          error: (error) => {
+            this.notify.showError('Failed to create record.', 'Error');
+            console.error('Error creating record:', error);
+          },
+        })
+      );
   }
 
   postWithoutToken(route: string, payload?: any): Observable<any> {

@@ -49,11 +49,20 @@
                   "maximumError": "5mb"
                 }
               ],
+              "optimization":{
+                "fonts": false,
+                "styles": true,
+                "scripts": true
+              },
               "outputHashing": "all"
             },
             "development": {
-              "optimization": false,
               "extractLicenses": false,
+              "optimization":{
+                "fonts": false,
+                "styles": true,
+                "scripts": true
+              },
               "sourceMap": true,
               "fileReplacements": [
                 {
@@ -70,6 +79,7 @@
           "configurations": {
             "production": {
               "buildTarget": "Taxi:build:production"
+              
             },
             "development": {
               "buildTarget": "Taxi:build:development"
