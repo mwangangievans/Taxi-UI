@@ -6,7 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps';
-import { TripCoordinate, tripInterface } from '../../model';
+import { TripCoordinate } from '../../model';
 import { HttpService } from '../../service/http.service';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';

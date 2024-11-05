@@ -1,8 +1,10 @@
 <div class="min-h-screen bg-white_ flex flex-col justify-center sm:py-12">
-    <div class="p-10 xs:p-0 mx-auto md:w-full md:max-w-md ">
-        <img src="../../../assets/uber-bg-preview.png" class="logo" alt="">
+    <app-loader *ngIf="isLoading"></app-loader>
 
-        <form class="mb-4" [formGroup]="loginForm" (ngSubmit)="login()">
+    <div class="p-10 xs:p-0 mx-auto md:w-full md:max-w-md ">
+        <img src="../../../assets/Tusafiri Rides Logo.svg" class="logo" alt="">
+
+        <form class="my-8" [formGroup]="loginForm" (ngSubmit)="login()">
             <div class="mt-4 mb-2 floating-label-wrapper">
                 <input type="text" formControlName="email" placeholder=" " required
                     class="input bg-gray-50 border border-border-green_ text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full py-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" />

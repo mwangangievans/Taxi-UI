@@ -6,13 +6,13 @@ import { DataService } from '../../service/data.service';
 import { CommonModule } from '@angular/common';
 import { UsersComponent } from '../users/users.component';
 import { HttpService } from '../../service/http.service';
-import { addIcons } from 'ionicons';
-import { HelperService } from '../../service/helper.service';
+import { LoaderService } from '../../service/loader.service';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, UsersComponent],
+  imports: [CommonModule, UsersComponent, LoaderComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
@@ -21,6 +21,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   dailyData: graphData[] = [];
   weeklyData: graphData[] = [];
   monthlyData: graphData[] = [];
+  isLoading: boolean = false;
 
   filters = [
     { id: 1, title: 'Daily', active: true },
@@ -32,10 +33,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     private chartService: ChartService,
     private dataService: DataService,
     private notify: NotificationService,
-    private api: HttpService
+    private api: HttpService,
+    private loaderService: LoaderService
   ) {}
 
   ngOnInit() {
+    this.loaderService.loading$.subscribe((loading) => {
+      this.isLoading = loading;
+    });
     this.loadGraphData('Daily');
     this.getStatistics();
   }

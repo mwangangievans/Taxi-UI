@@ -31,11 +31,14 @@ export const ErrorInterceptor = (
 
       if (error.error instanceof ErrorEvent) {
         // Client-side or network error
-        errorMessage = `Client-side error: ${error.error.message}`;
+        errorMessage = `${error.error.message}`;
+        errorMessage = error?.error?.message
+          ? `${error.error.message}`
+          : 'Something went wrong, try again';
       } else {
         // Server-side error
         // errorMessage = `Server-side error: ${error.status} ${error.error.message}`;
-        errorMessage = `${error.status} ${error.error.message}`;
+        errorMessage = `${error.error.message}`;
       }
 
       // Log the error or send it to a remote logging infrastructure

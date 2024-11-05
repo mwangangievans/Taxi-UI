@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
 import { HttpService } from '../../service/http.service';
-import { NotificationService } from '../../service/notification.service';
-import { error } from 'console';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { userInterface } from '../../model';
-import { addIcons } from 'ionicons';
-import { HttpClient } from '@angular/common/http';
 import { LoaderService } from '../../service/loader.service';
 import { LoaderComponent } from '../loader/loader.component';
 import { HelperService } from '../../service/helper.service';
@@ -16,13 +12,14 @@ import { HelperService } from '../../service/helper.service';
   standalone: true,
   imports: [CommonModule, RouterModule, LoaderComponent],
   templateUrl: './users.component.html',
-  styleUrl: './users.component.css',
+  styleUrls: ['./users.component.css'],
 })
 export class UsersComponent {
   allUsers: userInterface[] = [];
   totalItems: number = 0; // Total number of users from the server
   pageSize: number = 5; // Number of users per page
   currentPage: number = 0; // The current page number
+  totalPages: number = 0; // Total number of pages
   isLoading: boolean = false;
 
   displayedColumns: string[] = [
@@ -33,17 +30,10 @@ export class UsersComponent {
     'PHONE NUMBER',
     'More',
   ];
-  data: any[] = [];
-  resultsLength = 0;
-  isLoadingResults = true;
-  isRateLimitReached = false;
 
   constructor(
-    private _httpClient: HttpClient,
     private api: HttpService,
-    private notify: NotificationService,
     private loaderService: LoaderService,
-    private route: ActivatedRoute,
     public helper: HelperService
   ) {
     this.isLoading = true;
@@ -64,19 +54,20 @@ export class UsersComponent {
     };
 
     this.api
-      .get<userInterface[]>(
-        `user/admin?kycVerificationStatus=${filter}&pageNumber=${params.page}&pageSize=${params.size}`
+      .get<any>(
+        `user/v2/admin?kycVerificationStatus=${filter}&pageNumber=${params.page}&pageSize=${params.size}`
       )
       .subscribe({
-        next: (response: any) => {
-          this.allUsers = [];
-          this.allUsers = response;
-          this.totalItems = response.length; // Assuming totalItems is sent from the backend
+        next: (response) => {
+          // Update data based on the new response structure
+          this.allUsers = response.users;
+          this.totalItems = response.totalRecords;
+          this.totalPages = response.totalPages;
+          this.currentPage = response.currentPage;
         },
         error: (error) => {
           console.error('Error fetching users:', error);
         },
-        complete: () => {},
       });
   }
 
@@ -86,13 +77,13 @@ export class UsersComponent {
 
     this.getUsers('', this.currentPage, this.pageSize);
   }
+
   filters = [
     { id: 1, title: 'All', name: '', active: true },
     { id: 2, title: 'Pending Approval', name: 'PENDING', active: false },
     { id: 3, title: 'Accepted', name: 'ACCEPTED', active: false },
-    { id: 3, title: 'Rejected', name: 'REJECTED', active: false },
+    { id: 4, title: 'Rejected', name: 'REJECTED', active: false },
   ];
-  chart: any = [];
 
   updateFilter(index: number, filter: string) {
     this.filters = this.filters.map((filter, i) => ({

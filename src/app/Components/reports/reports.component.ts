@@ -29,9 +29,10 @@ export interface Earnings {
 export class ReportsComponent {
   Transactions: Transaction[] = [];
   totalItems: number = 0; // Total number of users from the server
-  pageSize: number = 5; // Number of users per page
+  pageSize: number = 10; // Number of users per page
   currentPage: number = 0; // The current page number
-  totalearings: number = 0;
+  totalPages: number = 0; // Total pages available from the API
+  totalEarnings: number = 0;
   totalCommission: number = 0;
   isLoading: boolean = false;
   earningsAndCommission!: Earnings;
@@ -58,16 +59,21 @@ export class ReportsComponent {
     };
 
     this.api
-      .get<Transaction[]>(
-        `report/transaction?pageNumber=${params.page}&pageSize=${params.size}`
+      .get<any>(
+        `report/v2/transaction?pageNumber=${params.page}&pageSize=${params.size}`
       )
       .subscribe({
         next: (response) => {
-          this.totalItems = response.length;
-          this.Transactions = this.formatTransactions(response);
+          this.totalItems = response.totalRecords;
+          this.totalPages = response.totalPages;
+          this.Transactions = this.formatTransactions(response.transactions);
         },
-        error: (error) => {},
-        complete: () => {},
+        error: (error) => {
+          this.api.handleError('Error fetching transactions.', error);
+        },
+        complete: () => {
+          this.isLoading = false;
+        },
       });
   }
   getEarningsAndCommission() {

@@ -117,7 +117,7 @@ export class DataService {
         {
           label: 'Earnings',
           data: earnings,
-          backgroundColor: ['rgb(1,120,115)'],
+          backgroundColor: ['rgb(43,104,71)'],
           borderColor: ['rgb(80,162,158)'],
           borderWidth: 1,
         },

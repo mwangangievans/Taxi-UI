@@ -11,25 +11,38 @@ import { HttpService } from '../../service/http.service';
 import { UserSessionService } from '../../service/user-session.service';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { LoaderService } from '../../service/loader.service';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule],
+  imports: [
+    ReactiveFormsModule,
+    HttpClientModule,
+    CommonModule,
+    LoaderComponent,
+  ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   loginForm!: FormGroup;
-  passwordVisible: boolean = false; // Toggle state for password visibility
+  passwordVisible: boolean = false;
+  isLoading: boolean = false;
 
   constructor(
     private _formBuilder: FormBuilder,
     private api: HttpService,
     private router: Router,
     private notify: NotificationService,
-    private sessionService: UserSessionService
+    private sessionService: UserSessionService,
+    private loaderService: LoaderService
   ) {
+    this.loaderService.loading$.subscribe((loading) => {
+      this.isLoading = loading;
+    });
+
     this.loginForm = this._formBuilder.group({
       email: ['', Validators.required],
       password: ['', Validators.required],

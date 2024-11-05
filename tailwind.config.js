@@ -25,20 +25,16 @@ module.exports = {
     extend: {
       
       colors: {
-        'green_': '#017873',
+        'green_': '#2b6847',
         'green_lighter': '#50A29E',
         'green_lighter_2': '#DEEDED',
         'green_lighter_3': '#EBF9F1',
-        'yellow_': '#FBBE4B',
+        'yellow_': '#d56431',
         'yellow_lighter': '#F2EADB',
         'white_': '#FFFFFF',
         'gray_': '#F0F0F0',
         'text_gray': '#B2BEBE',
         'danger_': '#A30D11',
-
-
-        
-
       },
       fontFamily: {
         sans: ['Public Sans', 'sans-serif'],

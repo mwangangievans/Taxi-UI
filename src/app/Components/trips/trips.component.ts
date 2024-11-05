@@ -10,6 +10,13 @@ import { RouterModule } from '@angular/router';
 import { LoaderService } from '../../service/loader.service';
 import { LoaderComponent } from '../loader/loader.component';
 
+interface TripApiResponse {
+  currentPage: number;
+  totalPages: number;
+  totalRecords: number;
+  trips: tripInterface[];
+}
+
 @Component({
   selector: 'app-trips',
   standalone: true,
@@ -20,7 +27,6 @@ import { LoaderComponent } from '../loader/loader.component';
     RouterModule,
     LoaderComponent,
   ],
-
   templateUrl: './trips.component.html',
   styleUrl: './trips.component.css',
 })
@@ -30,8 +36,8 @@ export class TripsComponent {
   filter: string = '';
 
   tripdata: tripInterface[] = [];
-  totalItems: number = 0; // Total number of users from the server
-  pageSize: number = 5; // Number of users per page
+  totalItems: number = 0; // Total number of trips from the server
+  pageSize: number = 5; // Number of trips per page
   currentPage: number = 0; // The current page number
 
   ngOnInit() {
@@ -41,37 +47,38 @@ export class TripsComponent {
     this.getTrips('', this.currentPage, this.pageSize);
   }
 
-  constructor(
-    private api: HttpService,
-    private notify: NotificationService,
-    private loaderService: LoaderService
-  ) {
+  constructor(private api: HttpService, private loaderService: LoaderService) {
     this.isLoading = true;
   }
+
   getTrips(filter: string, pageIndex: number, pageSize: number) {
-    console.log('yes..filters', filter);
+    console.log('Fetching trips with filter:', filter);
 
     const params = {
       kycVerificationStatus: filter,
       page: pageIndex.toString(),
       size: pageSize.toString(),
     };
+
     this.api
-      .get<tripInterface[]>(
-        `trip?tripCompletionStatus=${filter}&pageNumber=${params.page}&pageSize=${params.size}`
+      .get<TripApiResponse>(
+        `trip/v2?tripCompletionStatus=${filter}&pageNumber=${params.page}&pageSize=${params.size}`
       )
       .subscribe({
         next: (response) => {
-          this.tripdata = [];
-          this.totalItems = response.length;
-          this.tripdata = response.reverse();
-          // You can process the response here, e.g., update the state or UI
+          this.tripdata = response.trips || [];
+          this.totalItems = response.totalRecords;
+          this.currentPage = response.currentPage;
+          // Reverse the trips array if needed
+          this.tripdata = this.tripdata.reverse();
         },
         error: (error) => {
-          console.error('comming soon:', error);
+          console.error('Error fetching trips:', error);
           this.tripdata = [];
         },
-        complete: () => {},
+        complete: () => {
+          this.isLoading = false;
+        },
       });
   }
 
@@ -100,11 +107,8 @@ export class TripsComponent {
 
   getPlaceName(startPointReverseGeoCoordinatesResponse: string): string {
     try {
-      // Parse the JSON string into an object
       const geoData = JSON.parse(startPointReverseGeoCoordinatesResponse);
       this.display_name = geoData.display_name;
-
-      // Access and return the name property
       return geoData.display_name;
     } catch (error) {
       console.error('Error parsing JSON data:', error);

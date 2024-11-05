@@ -44,19 +44,36 @@ export class HttpService {
       .pipe(
         catchError((error) => {
           this.handleError('Error fetching data.', error);
-          return of(([] || {} || '') as T);
+
+          // Returning a more explicit empty value based on the type T
+          if (Array.isArray([] as T)) {
+            return of([] as unknown as T); // Return an empty array
+          } else if (typeof {} === typeof ({} as T)) {
+            return of({} as T); // Return an empty object
+          } else {
+            return of('' as unknown as T); // Return an empty string for non-object, non-array types
+          }
         })
       );
   }
-  patch(route: string, payload?: any): Observable<any> {
+
+  patch<T>(route: string, payload?: any): Observable<T> {
     return this.http
-      .patch<any>(`${baseUrl}${route}`, payload, {
-        headers: this.getHeaders(),
+      .patch<T>(`${baseUrl}${route}`, payload, {
+        headers: this.getHeaders(), // Assuming getHeaders() is defined in your HttpService
       })
       .pipe(
         catchError((error) => {
           this.handleError('Error updating data.', error);
-          return of(([] || {} || '') as any);
+
+          // Check if T is an array, object, or string, and return an empty value accordingly.
+          if (Array.isArray([] as T)) {
+            return of([] as T); // Return an empty array if T is expected to be an array
+          } else if (typeof {} === typeof ({} as T)) {
+            return of({} as T); // Return an empty object if T is an object
+          } else {
+            return of('' as T); // Return an empty string for other types (e.g., string, number)
+          }
         })
       );
   }
@@ -72,7 +89,7 @@ export class HttpService {
       })
       .pipe(
         tap({
-          next: (response) => {
+          next: () => {
             this.notify.showSuccess('Record created successfully!', 'Success');
           },
           error: (error) => {
@@ -86,7 +103,7 @@ export class HttpService {
   postWithoutToken(route: string, payload?: any): Observable<any> {
     return this.http.post<any>(`${baseUrl}${route}`, payload);
   }
-  private handleError(message: string, error: any): void {
+  public handleError(message: string, error: any): void {
     console.error(message, error);
     this.notify.showError(message, 'error'); // Show user-friendly error message
   }

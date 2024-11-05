@@ -1,5 +1,4 @@
-<!-- <div class="overflow-auto h-[80vh] scrollbar-hide"> -->
-<div class="overflow-auto md:h-[80vh] scrollbar-hide   _radius  flex-1 flex flex-col h-screen w-full">
+<div class="overflow-auto md:h-[80vh]   _radius  flex-1 flex flex-col h-screen w-full">
 
     <div class="grid md:grid-cols-4 grid-cols-2 md:gap-12  gap-4">
         <div
@@ -73,23 +72,26 @@
                 </ul>
             </div> -->
 
-            <div class="">
+            <div class="!md:justify-end">
                 <div class="rounded-lg border border-gray-300 bg-green_ px-2">
-                    <nav class="flex md:flex-wrap gap-4">
+                    <nav class=" gap-4 "> <!-- Added flex and md:justify-end -->
                         <a *ngFor="let stat of filters; let i = index" (click)="onFilterClick(stat.title)"
                             class="whitespace-nowrap cursor-pointer inline-flex rounded-lg py-1 px-3 text-sm text-white_ font-medium transition-all duration-200 ease-in-out"
                             [ngClass]="{
-                             'text-gray-600 hover:bg-white_ hover:text-gray-900': !stat.active,
-                             'bg-white_ !text-green_': stat.active
-                           }">
+                                'text-gray-600 hover:bg-white_ hover:text-gray-900': !stat.active,
+                                'bg-white_ !text-green_': stat.active
+                            }">
                             {{ stat.title }}
                         </a>
                     </nav>
                 </div>
             </div>
 
+
         </div>
         <canvas id="canvas"></canvas>
+        <app-loader *ngIf="isLoading"></app-loader>
+
 
     </div>
     <div class="">

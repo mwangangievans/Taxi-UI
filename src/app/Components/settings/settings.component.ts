@@ -11,7 +11,6 @@ import {
 import { LoaderComponent } from '../loader/loader.component';
 import { LoaderService } from '../../service/loader.service';
 import { MatDialog } from '@angular/material/dialog';
-import { IframeDisplayComponent } from '../iframe-display/iframe-display.component';
 import {
   FormBuilder,
   FormGroup,
@@ -179,15 +178,15 @@ export class SettingsComponent {
         percentageValue: +this.updateKyc.value.percentageValue,
       };
 
-      this.api.patch(`configuration`, data).subscribe({
-        next: (response) => {
+      this.api.patch('configuration', data).subscribe({
+        next: (response: any) => {
           this.activeTab = 1;
-          this.getKycs('DRIVER');
-
+          this.selectedFilter = 'DRIVER';
+          this.getKycs('DRIVER'); // Refetch KYC data after the update
           this.kyscData = response;
         },
         error: (error) => {
-          console.error('Error fetching users:', error);
+          console.error('Error updating configuration:', error);
           this.kyscData = [];
         },
         complete: () => {},
