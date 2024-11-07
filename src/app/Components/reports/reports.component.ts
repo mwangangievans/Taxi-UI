@@ -96,22 +96,19 @@ export class ReportsComponent {
   filters = [{ id: 1, title: 'Transactions', active: true }];
 
   formatTransactions(transactions: any[]): Transaction[] {
-    return transactions
-      .map((transaction) => ({
-        transactionId: transaction.transactionId,
-        transactionDate: transaction.transactionDate,
-        amount: transaction.amount,
-        commissionAmount: transaction.commissionAmount,
-        startPointReverseGeoCoordinatesResponse:
-          this.parseGeoCoordinatesResponse(
-            transaction.startPointReverseGeoCoordinatesResponse
-          ),
-        destinationReverseGeoCoordinatesResponse:
-          this.parseGeoCoordinatesResponse(
-            transaction.destinationReverseGeoCoordinatesResponse
-          ),
-      }))
-      .reverse();
+    return transactions.map((transaction) => ({
+      transactionId: transaction.transactionId,
+      transactionDate: transaction.transactionDate,
+      amount: transaction.amount,
+      commissionAmount: transaction.commissionAmount,
+      startPointReverseGeoCoordinatesResponse: this.parseGeoCoordinatesResponse(
+        transaction.startPointReverseGeoCoordinatesResponse
+      ),
+      destinationReverseGeoCoordinatesResponse:
+        this.parseGeoCoordinatesResponse(
+          transaction.destinationReverseGeoCoordinatesResponse
+        ),
+    }));
   }
   parseGeoCoordinatesResponse(response: string): string {
     const parsedResponse: GeoResponse = JSON.parse(response);

@@ -70,7 +70,7 @@ export class TripsComponent {
           this.totalItems = response.totalRecords;
           this.currentPage = response.currentPage;
           // Reverse the trips array if needed
-          this.tripdata = this.tripdata.reverse();
+          this.tripdata = this.tripdata;
         },
         error: (error) => {
           console.error('Error fetching trips:', error);
