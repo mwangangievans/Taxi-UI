@@ -1,9 +1,12 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserSession } from '../model';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
+import { HttpService } from './http.service';
+
+const baseUrl = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root',
@@ -36,8 +39,6 @@ export class UserSessionService {
   }
 
   public storeUserDataAfterLoginSuccess(data: any): void {
-    console.log('login data....', data);
-
     // Save session data after login
     const session: UserSession = {
       userId: data.userId,
@@ -58,6 +59,8 @@ export class UserSessionService {
 
   public refreshToken(): Observable<any> {
     const refreshToken = this.getSession()?.refreshToken;
+    // const httpservice_ = inject(HttpService).;
+
     if (!refreshToken) {
       throw new Error('No refresh token available');
     }
@@ -67,10 +70,21 @@ export class UserSessionService {
       `Bearer ${refreshToken}`
     );
 
-    return this.http.post('/api/auth/refresh-token', {}, { headers });
+    let refreshPayload = {
+      accessToken: this.getSession()?.accessToken,
+      refreshToken: this.getSession()?.refreshToken,
+    };
+
+    debugger;
+
+    // return this.http.post('auth/refresh', { refreshPayload }, { headers });
+    return this.http.post<any>(`${baseUrl}auth/refresh`, refreshPayload, {
+      headers,
+    });
   }
 
   public updateSessionTokens(accessToken: string, refreshToken: string): void {
+    debugger;
     const currentSession = this.getSession();
     if (currentSession) {
       const updatedSession = {

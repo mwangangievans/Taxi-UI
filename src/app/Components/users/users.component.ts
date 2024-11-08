@@ -1,93 +1,101 @@
 import { Component } from '@angular/core';
 import { HttpService } from '../../service/http.service';
-import { NotificationService } from '../../service/notification.service';
-import { error } from 'console';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { userInterface } from '../../model';
+import { LoaderService } from '../../service/loader.service';
+import { LoaderComponent } from '../loader/loader.component';
+import { HelperService } from '../../service/helper.service';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule, LoaderComponent],
   templateUrl: './users.component.html',
-  styleUrl: './users.component.css',
+  styleUrls: ['./users.component.css'],
 })
 export class UsersComponent {
-  ngOnInit() {
-    this.getUsers();
+  allUsers: userInterface[] = [];
+  totalItems: number = 0; // Total number of users from the server
+  pageSize: number = 10; // Number of users per page
+  currentPage: number = 0; // The current page number
+  totalPages: number = 0; // Total number of pages
+  isLoading: boolean = false;
+
+  displayedColumns: string[] = [
+    '#',
+    'Name',
+    'ROLE',
+    'EMAIL',
+    'PHONE NUMBER',
+    'More',
+  ];
+
+  constructor(
+    private api: HttpService,
+    private loaderService: LoaderService,
+    public helper: HelperService
+  ) {
+    this.isLoading = true;
   }
 
-  constructor(private api: HttpService, private notify: NotificationService) {}
-  getUsers() {
-    this.api.get('user/admin').subscribe({
-      next: (response) => {
-        console.log('User data retrieved:', response);
-        // You can process the response here, e.g., update the state or UI
-      },
-      error: (error) => {
-        console.error('Error fetching users:', error);
-        // Handle any errors here, such as showing an error message to the user
-      },
-      complete: () => {
-        console.log('Completed the request to get users.');
-        // Optional: Execute any additional code after the request completes
-      },
+  ngOnInit() {
+    this.loaderService.loading$.subscribe((loading) => {
+      this.isLoading = loading;
     });
+    this.getUsers('', this.currentPage, this.pageSize);
+  }
+
+  getUsers(filter: string, pageIndex: number, pageSize: number) {
+    const params = {
+      kycVerificationStatus: filter,
+      page: pageIndex.toString(),
+      size: pageSize.toString(),
+    };
+
+    this.api
+      .get<any>(
+        `user/v2/admin?kycVerificationStatus=${filter}&pageNumber=${params.page}&pageSize=${params.size}`
+      )
+      .subscribe({
+        next: (response) => {
+          // Update data based on the new response structure
+          this.allUsers = response.users;
+          this.totalItems = response.totalRecords;
+          this.totalPages = response.totalPages;
+          this.currentPage = response.currentPage;
+        },
+        error: (error) => {
+          console.error('Error fetching users:', error);
+        },
+      });
+  }
+
+  onPageChange(pageIndex: number) {
+    this.currentPage = pageIndex;
+    console.log('totalItems', this.totalItems, 'currentPage', this.currentPage);
+
+    this.getUsers('', this.currentPage, this.pageSize);
   }
 
   filters = [
-    { id: 1, title: 'All', active: true },
-    { id: 2, title: 'Pending Approval', active: false },
-    { id: 3, title: 'Approval', active: false },
+    { id: 1, title: 'All', name: '', active: true },
+    { id: 2, title: 'Pending Approval', name: 'PENDING', active: false },
+    { id: 3, title: 'Accepted', name: 'ACCEPTED', active: false },
+    { id: 4, title: 'Rejected', name: 'REJECTED', active: false },
   ];
-  chart: any = [];
 
-  updateFilter(index: number) {
+  updateFilter(index: number, filter: string) {
     this.filters = this.filters.map((filter, i) => ({
       ...filter,
       active: i === index,
     }));
+    this.currentPage = 0;
+
+    this.getUsers(filter, this.currentPage, this.pageSize);
   }
 
-  tableData = [
-    {
-      date: '1/07/2024',
-      name: 'John Doe',
-      id: '35907530',
-      numberPlate: 'KCE 026Y',
-      documents: 'KYC Documents',
-      status: 'Pending',
-    },
-    {
-      date: '1/07/2024',
-      name: 'John Doe',
-      id: '35907530',
-      numberPlate: 'KCE 026Y',
-      documents: 'KYC Documents',
-      status: 'Approved',
-    },
-    {
-      date: '1/07/2024',
-      name: 'John Doe',
-      id: '35907530',
-      numberPlate: 'KCE 026Y',
-      documents: 'KYC Documents',
-      status: 'Pending',
-    },
-    {
-      date: '1/07/2024',
-      name: 'John Doe',
-      id: '35907530',
-      numberPlate: 'KCE 026Y',
-      documents: 'KYC Documents',
-      status: 'Pending',
-    },
-    {
-      date: '1/07/2024',
-      name: 'John Doe',
-      id: '35907530',
-      numberPlate: 'KCE 026Y',
-      documents: 'KYC Documents',
-      status: 'Pending',
-    },
-  ];
+  getRole(role: any) {
+    return role[0] === 'ADMIN';
+  }
 }

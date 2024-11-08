@@ -1,0 +1,104 @@
+<div class="md:h-screen bg-white_  _radius  flex-1 flex flex-col h-screen w-full">
+    <div class=" md:flex p-6 md:justify-between">
+        <div>
+            <p class="md:text-2xl text-xl text-black font-bold">Passagers</p>
+        </div>
+        <div class="">
+            <form class="md:flex flex-col">
+
+
+                <div class="relative">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                        </svg>
+                    </div>
+                    <input type="search" id="default-search"
+                        class="block w-full p-2 ps-10 text-sm text-text_gray px-12 border border-green_lighter_2 _radius bg-green_lighter_2 dark:bg-green_lighter_2 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:outline-none focus:ring-0 focus:border-green_lighter_2"
+                        placeholder="Search..." required />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="w-full justify-start mx-2">
+        <div class="">
+            <div class=" border-b-2 border-gray_    md:px-2">
+                <nav class="flex flex-wrap md:gap-4">
+                    <a *ngFor="let stat of filters; let i = index" (click)="updateFilter(i,stat.name)"
+                        class="whitespace-nowrap cursor-pointer inline-flex  py-1 px-3  text-gray font-medium transition-all duration-200 ease-in-out"
+                        [ngClass]="{
+                         'text-gray-600 hover:bg-white_ hover:text-gray-900': !stat.active,
+                         'bg-white_ !text-green_  font-bold border-b-2 !border-green_ ': stat.active
+                       }">
+                        {{ stat.title }}
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!totalItems && !isLoading" class="flex items-center justify-center text-lg font-semibold mb-4 h-1/2">
+        <p class="text-center text-3xl">no records available</p>
+    </div>
+    <app-loader *ngIf="isLoading"></app-loader>
+
+
+    <div class="relative overflow-x-auto" *ngIf="allUsers.length">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs uppercase bg-gray-50 text-gray-700">
+                <tr>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">#</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Name</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Role</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Email</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Gender</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Phone Number</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">More</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of allUsers ; let user = index" [ngClass]="{
+                        'odd:bg-white even:bg-gray-50 border-b': true
+                    }">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900">{{ user + 1 }}</th>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ row.name | titlecase }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ row.roles }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ row.email }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ row.userProfile.gender }}</td>
+
+                    <td class="px-6 py-4 whitespace-nowrap">{{ row.userProfile.phoneNumber }}</td>
+                    <td class="px-6 py-4 ">
+                        <a *ngIf="!getRole(row.roles)"
+                            (click)="helper.navigateToAnotherComponent('/home/users/' + row.userId)"
+                            class="text-green-600 cursor-pointer">View</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="flex gap-4 items-center mt-4 mx-12 md:mt-12 " *ngIf="allUsers.length">
+        <button class="px-4 py-2 bg-gray-300 text-gray-900 rounded" [disabled]="currentPage === 0"
+            (click)="onPageChange(currentPage - 1)">
+            Previous
+        </button>
+
+        <span class="text-sm">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+        <button class="px-4 py-2 bg-gray-300 text-gray-900 rounded" [disabled]="currentPage + 1 >= totalPages"
+            (click)="onPageChange(currentPage + 1)">
+            Next
+        </button>
+    </div>
+
+
+
+
+
+
+
+
+
+</div>

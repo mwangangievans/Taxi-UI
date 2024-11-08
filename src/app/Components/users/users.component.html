@@ -1,36 +1,11 @@
-<div class="h-[80vh] bg-white_ _radius">
-    <div class="flex p-6 justify-between">
+<div class="md:h-[80vh] bg-white_  _radius  flex-1 flex flex-col h-screen w-full">
+    <div class=" md:flex p-6 md:justify-between">
         <div>
-            <p class="text-2xl text-black font-bold">Users</p>
+            <p class="md:text-2xl text-xl text-black font-bold">Users</p>
         </div>
         <div class="">
-            <form class="flex">
-                <div class="">
-                    <button id="dropdown-button" data-dropdown-toggle="dropdown"
-                        class="flex-shrink-0 z-10 inline-flex items-center py-2 _radius mx-12 px-12 text-sm font-medium text-center text-text_gray bg-green_lighter_2 border border-green_lighter_2 rounded-s-lg hover:bg-green_lighter_2 focus:ring-0 focus:outline-none focus:ring-gray-100 dark:bg-green_lighter_2 dark:hover:bg-green_lighter_2 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
-                        type="button">
-                        Filter By
-                        <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                            fill="none" viewBox="0 0 10 6">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 4 4 4-4" />
-                        </svg>
-                    </button>
-                    <div id="dropdown"
-                        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-lg w-44 dark:bg-gray-700">
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-button">
-                            <li>
-                                <button type="button"
-                                    class="inline-flex w-full px-4 py-2 hover:bg-green_lighter_2 dark:hover:bg-gray-600 dark:hover:text-white">Pending
-                                    Approval</button>
-                            </li>
-                            <li>
-                                <button type="button"
-                                    class="inline-flex w-full px-4 py-2 hover:bg-green_lighter_2 dark:hover:bg-gray-600 dark:hover:text-white">Approved</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+            <form class="md:flex flex-col">
+
 
                 <div class="relative">
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -47,15 +22,15 @@
             </form>
         </div>
     </div>
-    <div class="w-full justify-start">
+    <div class="w-full justify-start mx-2">
         <div class="">
-            <div class=" border-b-2 border-gray_    px-2">
-                <nav class="flex flex-wrap gap-4">
-                    <a *ngFor="let stat of filters; let i = index" (click)="updateFilter(i)"
-                        class="whitespace-nowrap cursor-pointer inline-flex  py-1 px-3 text-sm text-gray font-medium transition-all duration-200 ease-in-out"
+            <div class=" border-b-2 border-gray_    md:px-2">
+                <nav class="flex flex-wrap md:gap-4">
+                    <a *ngFor="let stat of filters; let i = index" (click)="updateFilter(i,stat.name)"
+                        class="whitespace-nowrap cursor-pointer inline-flex  py-1 px-3  text-gray font-medium transition-all duration-200 ease-in-out"
                         [ngClass]="{
                          'text-gray-600 hover:bg-white_ hover:text-gray-900': !stat.active,
-                         'bg-white_ !text-green_ border-b-2 !border-green_ ': stat.active
+                         'bg-white_ !text-green_  font-bold border-b-2 !border-green_ ': stat.active
                        }">
                         {{ stat.title }}
                     </a>
@@ -63,60 +38,64 @@
             </div>
         </div>
     </div>
-    <!-- ================================table=============================== -->
+
+    <div *ngIf="!totalItems && !isLoading" class="flex items-center justify-center text-lg font-semibold mb-4 h-1/2">
+        <p class="text-center text-3xl">no records available</p>
+    </div>
+    <app-loader *ngIf="isLoading"></app-loader>
 
 
-    <div class="relative overflow-x-auto  sm:rounded-lg my-12">
+    <div class="relative overflow-x-auto" *ngIf="allUsers.length">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead class="text-xs uppercase bg-gray-50 text-gray-700">
                 <tr>
-                    <th scope="col" class="px-6 py-3">Date</th>
-                    <th scope="col" class="px-6 py-3">Name</th>
-                    <th scope="col" class="px-6 py-3">ID</th>
-                    <th scope="col" class="px-6 py-3">Number Plate</th>
-                    <th scope="col" class="px-6 py-3">Documents</th>
-                    <th scope="col" class="px-6 py-3">Status</th>
-                    <th scope="col" class="px-6 py-3">More</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">#</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Name</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Role</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Email</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Phone Number</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">More</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let row of tableData"
-                    [ngClass]="{'odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700': true}">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {{ row.date }}
-                    </th>
-                    <td class="px-6 py-4">{{ row.name }}</td>
-                    <td class="px-6 py-4">{{ row.id }}</td>
-                    <td class="px-6 py-4">{{ row.numberPlate }}</td>
-                    <td class="px-6 py-4">{{ row.documents }}</td>
-                    <td class="px-6 py-4 flex">
-                        <button *ngIf="row.status === 'Pending'" type="button"
-                            class="flex items-center text-white bg-yellow_ hover:bg-yellow_ focus:ring-0 focus:ring-none font-medium _radius text-sm px-6 py-1 me-2 mb-2">
-                            <svg class="w-6 h-6 text-gray-800 me-2" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                viewBox="0 0 24 24">
-                                <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 12h14m-7 7V5" />
-                            </svg>
-                            Pending
-                        </button>
-                        <button *ngIf="row.status === 'Approved'" type="button"
-                            class="flex items-center text-green-800 bg-green-200 hover:bg-green-300 focus:ring-0 focus:ring-none font-medium _radius text-sm px-6 py-1 me-2 mb-2">
-                            <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                <path stroke="#017873" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 11.917 9.724 16.5 19 7.5" />
-                            </svg>
-                            Approved
-                        </button>
-                    </td>
-                    <td class="px-6 py-4">
-                        <a class="font-medium text-gray-700 dark:text-gray-300 cursor-pointer">View</a>
+                <tr *ngFor="let row of allUsers;let k = index" [ngClass]="{
+                        'odd:bg-white even:bg-gray-50 border-b': true
+                    }">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900">{{ k + 1 }}</th>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ row.name | titlecase }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ row.roles }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ row.email }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ row.userProfile.phoneNumber }}</td>
+                    <td class="px-6 py-4 ">
+                        <a *ngIf="!getRole(row.roles)"
+                            (click)="helper.navigateToAnotherComponent('/home/users/' + row.userId)"
+                            class="text-green-600 cursor-pointer">View</a>
                     </td>
                 </tr>
             </tbody>
         </table>
+
     </div>
+
+    <div class="flex gap-4 items-center mt-4 mx-12 md:mt-12 " *ngIf="allUsers.length">
+        <button class="px-4 py-2 bg-gray-300 text-gray-900 rounded" [disabled]="currentPage === 0"
+            (click)="onPageChange(currentPage - 1)">
+            Previous
+        </button>
+
+        <span class="text-sm">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+        <button class="px-4 py-2 bg-gray-300 text-gray-900 rounded" [disabled]="currentPage + 1 >= totalPages"
+            (click)="onPageChange(currentPage + 1)">
+            Next
+        </button>
+    </div>
+
+
+
+
+
+
+
 
 
 </div>

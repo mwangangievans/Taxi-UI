@@ -1,94 +1,86 @@
-<!-- Sidebar -->
-<div class="flex h-screen">
-    <div class="bg-green_ text-white w-64 space-y-6 py-7 px-0">
-        <h1 class="mt-10 ml-10 text-3xl font-bold">Taxi</h1>
-        <!-- <img src="../../../assets/uber-bg-preview.png" class="logo" alt=""> -->
+<nav class="fixed top-0 z-50 w-full bg-white_ shadow-md">
+    <div class="px-3 py-3 lg:px-5 lg:pl-3">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center justify-start rtl:justify-end">
+                <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
+                    type="button"
+                    class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                    <span class="sr-only">Open sidebar</span>
+                    <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path clip-rule="evenodd" fill-rule="evenodd"
+                            d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+                        </path>
+                    </svg>
+                </button>
+
+                <a class="flex ms-2 md:me-24">
+                    <img src="../../../assets/Tusafiri Rides Logo.svg" class="h-12 me-3" alt="" />
+                    <span
+                        class="self-center text-white text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Tusafiri
+                        Rides</span>
+                </a>
+            </div>
+
+            <div class="flex items-center"></div>
+        </div>
+    </div>
+</nav>
+
+<aside id="logo-sidebar"
+    class="fixed top-0 left-0 z-40 w-64 h-screen pt-2 transition-transform -translate-x-full bg-green_ border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+    aria-label="Sidebar">
+    <div class="h-full pb-4 overflow-y-auto bg-green_ dark:bg-gray-800">
+        <!-- <ul class="mt-20 space-y-3">
+            <li *ngFor="let item of navigationItems" [routerLink]="item.routerLink" routerLinkActive="active"
+                class="navigation-item">
+                <mat-icon>{{ item.icon }}</mat-icon>
+                <span>{{ item.label }}</span>
+            </li>
+        </ul> -->
+
         <ul class="mt-20 space-y-3">
-            <li routerLink="dashboard" routerLinkActive="active" class="navigation-item">
-                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    width="24" height="24" fill="white" viewBox="0 0 24 24">
-                    <path fill-rule="evenodd"
-                        d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z"
-                        clip-rule="evenodd" />
-                </svg>
+            <li *ngFor="let item of navigationItems">
+                <button type="button" [routerLink]="item.routerLink" routerLinkActive="active"
+                    [routerLinkActiveOptions]="{ exact: true }"
+                    class="flex navigation-item items-center w-full text-base transition duration-75 group hover:bg-accent dark:text-white hover:text-secondary"
+                    (click)="toggleItem(item)">
+                    <mat-icon>{{ item.icon }}</mat-icon>
+                    <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">{{ item.label }}</span>
 
-                <span>Home</span>
-            </li>
-            <li routerLink="users" routerLinkActive="active" class="navigation-item">
-                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    width="24" height="24" fill="white" viewBox="0 0 24 24">
-                    <path fill-rule="evenodd"
-                        d="M8 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H6Zm7.25-2.095c.478-.86.75-1.85.75-2.905a5.973 5.973 0 0 0-.75-2.906 4 4 0 1 1 0 5.811ZM15.466 20c.34-.588.535-1.271.535-2v-1a5.978 5.978 0 0 0-1.528-4H18a4 4 0 0 1 4 4v1a2 2 0 0 1-2 2h-4.535Z"
-                        clip-rule="evenodd" />
-                </svg>
+                    <!-- Toggle icons based on children existence and toggle status -->
+                    <mat-icon *ngIf="item.children && item.children.length > 0 && !item.toggled">
+                        keyboard_arrow_right
+                    </mat-icon>
+                    <mat-icon *ngIf="item.children && item.children.length > 0 && item.toggled">
+                        keyboard_arrow_down
+                    </mat-icon>
+                </button>
 
-                <span>Users</span>
-            </li>
-            <li routerLink="reports" routerLinkActive="active" class="navigation-item">
-                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="white" stroke-linecap="round" stroke-width="2"
-                        d="M9 8h10M9 12h10M9 16h10M4.99 8H5m-.02 4h.01m0 4H5" />
-                </svg>
-
-
-                <span>Reports</span>
-            </li>
-            <li routerLink="trips" routerLinkActive="active" class="navigation-item">
-                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    width="24" height="24" fill="white" viewBox="0 0 24 24">
-                    <path fill-rule="evenodd"
-                        d="M4 4a2 2 0 0 0-2 2v9a1 1 0 0 0 1 1h.535a3.5 3.5 0 1 0 6.93 0h3.07a3.5 3.5 0 1 0 6.93 0H21a1 1 0 0 0 1-1v-4a.999.999 0 0 0-.106-.447l-2-4A1 1 0 0 0 19 6h-5a2 2 0 0 0-2-2H4Zm14.192 11.59.016.02a1.5 1.5 0 1 1-.016-.021Zm-10 0 .016.02a1.5 1.5 0 1 1-.016-.021Zm5.806-5.572v-2.02h4.396l1 2.02h-5.396Z"
-                        clip-rule="evenodd" />
-                </svg>
-
-                <span>Trips</span>
-            </li>
-            <li routerLink="settings" routerLinkActive="active" class="navigation-item">
-                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M21 13v-2a1 1 0 0 0-1-1h-.757l-.707-1.707.535-.536a1 1 0 0 0 0-1.414l-1.414-1.414a1 1 0 0 0-1.414 0l-.536.535L14 4.757V4a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v.757l-1.707.707-.536-.535a1 1 0 0 0-1.414 0L4.929 6.343a1 1 0 0 0 0 1.414l.536.536L4.757 10H4a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h.757l.707 1.707-.535.536a1 1 0 0 0 0 1.414l1.414 1.414a1 1 0 0 0 1.414 0l.536-.535 1.707.707V20a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-.757l1.707-.708.536.536a1 1 0 0 0 1.414 0l1.414-1.414a1 1 0 0 0 0-1.414l-.535-.536.707-1.707H20a1 1 0 0 0 1-1Z" />
-                    <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
-                </svg>
-
-
-                <span>Settings</span>
-            </li>
-            <li (click)="logout()" class="navigation-item">
-                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M20 12H8m12 0-4 4m4-4-4-4M9 4H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h2" />
-                </svg>
-
-
-
-                <span>Log out</span>
+                <!-- Children menu, shown if toggled -->
+                <ul class="py-2 space-y-2" [class.hidden]="!item.toggled"
+                    *ngIf="item.children && item.children.length > 0 && item.toggled">
+                    <li *ngFor="let child of item.children">
+                        <a [routerLink]="child.routerLink" routerLinkActive="active"
+                            class="ml-12 flex items-center w-full p-2 text-white transition duration-75 rounded-lg pl-11 group hover:bg-accent dark:text-white hover:text-secondary">
+                            {{ child.label }}
+                        </a>
+                    </li>
+                </ul>
             </li>
         </ul>
 
+
+        <li (click)="logout()" class="navigation-item">
+            <mat-icon>settings_power</mat-icon>
+
+            <span>Log out</span>
+        </li>
     </div>
+</aside>
 
-    <!-- Main content -->
-    <div class="flex-1 flex flex-col">
-        <!-- Topbar -->
-        <header class="bg-green_  py-4  h-14">
-            <div class="flex justify-between items-center">
-
-            </div>
-        </header>
-
-        <!-- Main Content -->
-        <main class="flex-1 px-16 py-8 bg-gray_">
-            <div class="grid grid-cols-1 ">
-                <div class="bg-gray_ p-6 rounded-lg ">
-                    <router-outlet></router-outlet>
-
-                </div>
-
-            </div>
-        </main>
+<div class="md:p-4 p-2 sm:ml-64 bg-gray_">
+    <div class="md:p-4 p-4 rounded-lg dark:border-gray-700 mt-14">
+        <router-outlet></router-outlet>
     </div>
 </div>
