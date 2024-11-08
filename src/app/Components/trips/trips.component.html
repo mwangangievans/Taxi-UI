@@ -1,5 +1,5 @@
 <!-- <div class="h-[80vh] bg-white_ _radius"> -->
-<div class="overflow-auto md:h-[80vh]  bg-white_  _radius  flex-1 flex flex-col h-screen w-full">
+<div class=" md:h-screen  bg-white_  _radius  flex-1 flex flex-col  w-full">
 
     <!-- <div class=" bg-white_ _radius"> -->
 
@@ -95,19 +95,24 @@
         </table>
     </div>
 
-    <div *ngIf="tripdata.length " class="flex gap-4 items-center mt-4 mx-12">
+
+
+
+    <!-- Pagination Controls -->
+    <div *ngIf="tripdata.length " class="flex gap-4 items-center my-4 mx-12">
         <button class="px-4 py-2 bg-gray-300 text-gray-900 rounded" [disabled]="currentPage === 0"
             (click)="onPageChange(currentPage - 1)">
             Previous
         </button>
 
-        <span>Page {{ currentPage + 1 }} of {{ totalItems }}</span>
+        <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
 
-        <button class="px-4 py-2 bg-gray-300 text-gray-900 rounded"
-            [disabled]="currentPage == totalItems || currentPage > totalItems" (click)="onPageChange(currentPage + 1)">
+        <button class="px-4 py-2 bg-gray-300 text-gray-900 rounded" [disabled]="currentPage + 1 >= totalPages"
+            (click)="onPageChange(currentPage + 1)">
             Next
         </button>
     </div>
+
 
 
     <!-- <div *ngIf="!totalItems" class="flex items-center justify-center text-lg bg-gray-200 font-semibold mb-4 h-full">

@@ -19,7 +19,7 @@ export class ChartService {
             beginAtZero: true,
             ticks: {
               callback: function (value) {
-                return '$ ' + value;
+                return 'KES ' + value;
               },
               font: {
                 weight: 'bold',

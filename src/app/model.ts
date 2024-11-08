@@ -39,6 +39,7 @@ export interface userInterface {
   roles: [];
   userProfile: {
     profileId: number;
+    gender: string;
     phoneNumber: string;
     hasVerifiedDriverProfile: boolean;
     hasVerifiedCustomerProfile: boolean;

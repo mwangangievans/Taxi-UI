@@ -2,18 +2,14 @@
     display: flex;
     align-items: center;
     padding: 16px 40px;
-    /* border-radius: 8px; */
     cursor: pointer;
     color: #ccc;
     gap: 8px;
 }
 
-/* .navigation-item:hover {
-    background-color: #50A29E;
-} */
 
 .active {
-    background-color: #76c79c; /* Example active color */
+    background-color: #76c79c; 
     font-weight: bold;
     color: #FFFFFF;
 }
@@ -22,3 +18,7 @@
     width: 24px;
     height: 24px;
 }
+
+
+
+ 

@@ -1,7 +1,7 @@
-<div class="md:h-[80vh] bg-white_  _radius  flex-1 flex flex-col h-screen w-full">
+<div class="md:h-screen bg-white_  _radius  flex-1 flex flex-col h-screen w-full">
     <div class=" md:flex p-6 md:justify-between">
         <div>
-            <p class="md:text-2xl text-xl text-black font-bold">Users</p>
+            <p class="md:text-2xl text-xl text-black font-bold">Passagers</p>
         </div>
         <div class="">
             <form class="md:flex flex-col">
@@ -53,18 +53,21 @@
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Name</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Role</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Email</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Gender</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Phone Number</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">More</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let row of allUsers;let k = index" [ngClass]="{
+                <tr *ngFor="let row of allUsers ; let user = index" [ngClass]="{
                         'odd:bg-white even:bg-gray-50 border-b': true
                     }">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900">{{ k + 1 }}</th>
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900">{{ user + 1 }}</th>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.name | titlecase }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.roles }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.email }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ row.userProfile.gender }}</td>
+
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.userProfile.phoneNumber }}</td>
                     <td class="px-6 py-4 ">
                         <a *ngIf="!getRole(row.roles)"

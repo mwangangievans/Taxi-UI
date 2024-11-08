@@ -37,8 +37,9 @@ export class TripsComponent {
 
   tripdata: tripInterface[] = [];
   totalItems: number = 0; // Total number of trips from the server
-  pageSize: number = 5; // Number of trips per page
+  pageSize: number = 10; // Number of trips per page
   currentPage: number = 0; // The current page number
+  totalPages: number = 0; // Total pages available from the API
 
   ngOnInit() {
     this.loaderService.loading$.subscribe((loading) => {
@@ -69,6 +70,8 @@ export class TripsComponent {
           this.tripdata = response.trips || [];
           this.totalItems = response.totalRecords;
           this.currentPage = response.currentPage;
+          this.totalPages = response.totalPages;
+
           // Reverse the trips array if needed
           this.tripdata = this.tripdata;
         },

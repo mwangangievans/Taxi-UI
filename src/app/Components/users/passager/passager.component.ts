@@ -1,23 +1,23 @@
 import { Component } from '@angular/core';
-import { HttpService } from '../../service/http.service';
+import { userInterface } from '../../../model';
+import { HttpService } from '../../../service/http.service';
+import { LoaderService } from '../../../service/loader.service';
+import { HelperService } from '../../../service/helper.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { userInterface } from '../../model';
-import { LoaderService } from '../../service/loader.service';
-import { LoaderComponent } from '../loader/loader.component';
-import { HelperService } from '../../service/helper.service';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
-  selector: 'app-users',
+  selector: 'app-passager',
   standalone: true,
   imports: [CommonModule, RouterModule, LoaderComponent],
-  templateUrl: './users.component.html',
-  styleUrls: ['./users.component.css'],
+  templateUrl: './passager.component.html',
+  styleUrl: './passager.component.css',
 })
-export class UsersComponent {
+export class PassagerComponent {
   allUsers: userInterface[] = [];
   totalItems: number = 0; // Total number of users from the server
-  pageSize: number = 10; // Number of users per page
+  pageSize: number = 5; // Number of users per page
   currentPage: number = 0; // The current page number
   totalPages: number = 0; // Total number of pages
   isLoading: boolean = false;
@@ -55,7 +55,7 @@ export class UsersComponent {
 
     this.api
       .get<any>(
-        `user/v2/admin?kycVerificationStatus=${filter}&pageNumber=${params.page}&pageSize=${params.size}`
+        `user/v2/admin?kycVerificationStatus=${filter}&pageNumber=${params.page}&pageSize=${params.size}&role=CUSTOMER`
       )
       .subscribe({
         next: (response) => {

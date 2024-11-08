@@ -25,6 +25,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+
+interface TripApiResponse {
+  currentPage: number;
+  totalPages: number;
+  totalRecords: number;
+  trips: tripInterface[];
+}
 @Component({
   selector: 'app-users-detail',
   standalone: true,
@@ -58,6 +65,7 @@ export class UsersDetailComponent {
   singleDocument!: UserKycDocument;
   userId: string = '';
   verifykycForm: FormGroup;
+  totalPages: number = 0; // Total pages available from the API
 
   constructor(
     private api: HttpService,
@@ -223,32 +231,70 @@ export class UsersDetailComponent {
     this.getTrips(filter, this.userId, this.currentPage, this.pageSize);
   }
 
+  // getTrips(
+  //   filter: string,
+  //   userId: string,
+  //   pageIndex: number,
+  //   pageSize: number
+  // ) {
+  //   const params = {
+  //     kycVerificationStatus: filter,
+  //     page: pageIndex.toString(),
+  //     size: pageSize.toString(),
+  //   };
+  //   this.api
+  //     .get<tripInterface[]>(
+  //       `trip/v2?tripCompletionStatus=${filter}&driverUserId=${userId}&pageNumber=${params.page}&pageSize=${params.size}`
+  //     )
+  //     .subscribe({
+  //       next: (response) => {
+  //         this.tripdata = [];
+  //         this.tripdata = response.reverse();
+  //         this.totalItems = response.length;
+  //       },
+  //       error: (error) => {
+  //         console.error('comming soon:', error);
+  //         this.tripdata = [];
+  //       },
+  //       complete: () => {},
+  //     });
+  // }
+
   getTrips(
     filter: string,
     userId: string,
     pageIndex: number,
     pageSize: number
   ) {
+    console.log('Fetching trips with filter:', filter);
+
     const params = {
       kycVerificationStatus: filter,
       page: pageIndex.toString(),
       size: pageSize.toString(),
     };
+
     this.api
-      .get<tripInterface[]>(
-        `trip?tripCompletionStatus=${filter}&driverUserId=${userId}&pageNumber=${params.page}&pageSize=${params.size}`
+      .get<TripApiResponse>(
+        `trip/v2?tripCompletionStatus=${filter}&driverUserId=${userId}&pageNumber=${params.page}&pageSize=${params.size}`
       )
       .subscribe({
         next: (response) => {
-          this.tripdata = [];
-          this.tripdata = response.reverse();
-          this.totalItems = response.length;
+          this.tripdata = response.trips || [];
+          this.totalItems = response.totalRecords;
+          this.currentPage = response.currentPage;
+          this.totalPages = response.totalPages;
+
+          // Reverse the trips array if needed
+          this.tripdata = this.tripdata;
         },
         error: (error) => {
-          console.error('comming soon:', error);
+          console.error('Error fetching trips:', error);
           this.tripdata = [];
         },
-        complete: () => {},
+        complete: () => {
+          this.isLoading = false;
+        },
       });
   }
 

@@ -1,17 +1,17 @@
-<div class="overflow-auto md:h-[80vh]  bg-white_  _radius  flex-1 flex flex-col h-screen w-full">
+<div class=" md:h-screen  bg-white_  _radius  flex-1 flex flex-col  w-full">
 
     <div class="md:flex p-6  ">
         <div class="grid md:grid-cols-4 grid-cols-2 md:gap-12 gap-4  w-full ">
             <div
                 class="md:max-w-sm  md:px-12 py-8 font-bold text-black bg-yellow_lighter border-2 border-yellow_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans">
-                {{earningsAndCommission.totalEarnings | currency: 'Ksh. ' }}
+                {{earningsAndCommission.totalEarnings | currency: 'KES. ' }}
                 <h5 class="md:mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                 </h5>
                 <p class="md:mb-3 font-normal text-gray-700 dark:text-gray-400">Total earnings</p>
             </div>
             <div
                 class="md:max-w-sm  font-bold text-black   md:px-12 py-8 bg-green_lighter_2 border-2 border-green_  _radius dark:bg-gray-800 dark:border-gray-700 text-center public-sans">
-                {{earningsAndCommission.totalCommission | currency: 'Ksh. ' }}
+                {{earningsAndCommission.totalCommission | currency: 'KES. ' }}
                 <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                 </h5>
                 <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Total Commissions</p>
@@ -41,34 +41,7 @@
                             class="block w-full p-2 ps-10 text-sm text-text_gray px-12 border border-green_lighter_2 _radius bg-green_lighter_2 dark:bg-green_lighter_2 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:outline-none focus:ring-0 focus:border-green_lighter_2"
                             placeholder="Search..." required />
                     </div>
-                    <!-- <div class="w-full">
-                        <button id="dropdown-button" data-dropdown-toggle="dropdown"
-                            class="flex-shrink-0 w-full inline-flex items-center justify-between py-2 _radius px-12 text-sm font-medium text-center text-text_gray bg-green_lighter_2 border border-green_lighter_2 rounded-s-lg hover:bg-green_lighter_2 focus:ring-0 focus:outline-none focus:ring-gray-100 dark:bg-green_lighter_2 dark:hover:bg-green_lighter_2 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
-                            type="button">
-                            Filter By
-                            <svg class="w-2.5 h-2.5 ml-auto" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                fill="none" viewBox="0 0 10 6">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" d="m1 1 4 4 4-4" />
-                            </svg>
-                        </button>
 
-                        <div id="dropdown"
-                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-lg w-44 dark:bg-gray-700">
-                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
-                                aria-labelledby="dropdown-button">
-                                <li>
-                                    <button type="button"
-                                        class="inline-flex w-full px-4 py-2 hover:bg-green_lighter_2 dark:hover:bg-gray-600 dark:hover:text-white">Pending
-                                        Approval</button>
-                                </li>
-                                <li>
-                                    <button type="button"
-                                        class="inline-flex w-full px-4 py-2 hover:bg-green_lighter_2 dark:hover:bg-gray-600 dark:hover:text-white">Approved</button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div> -->
 
                 </form>
             </div>
@@ -100,7 +73,7 @@
         <app-loader *ngIf="isLoading"></app-loader>
 
 
-        <div class="relative overflow-x-auto" *ngIf="Transactions.length">
+        <div class="relative overflow-x-auto  sm:rounded-lg my-12" *ngIf="Transactions.length">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -137,9 +110,9 @@
                 Previous
             </button>
 
-            <span>Page {{ currentPage + 1 }} of {{ totalItems }}</span>
+            <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
 
-            <button class="px-4 py-2 bg-gray-300 text-gray-900 rounded" [disabled]="currentPage + 1 >= totalItems"
+            <button class="px-4 py-2 bg-gray-300 text-gray-900 rounded" [disabled]="currentPage + 1 >= totalPages"
                 (click)="onPageChange(currentPage + 1)">
                 Next
             </button>
