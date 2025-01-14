@@ -17,19 +17,14 @@ export interface Earnings {
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [
-    UsersComponent,
-    CommonModule,
-    IframeDisplayComponent,
-    LoaderComponent,
-  ],
+  imports: [CommonModule, LoaderComponent],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.css',
 })
 export class ReportsComponent {
   Transactions: Transaction[] = [];
   totalItems: number = 0; // Total number of users from the server
-  pageSize: number = 10; // Number of users per page
+  pageSize: number = 5; // Number of users per page
   currentPage: number = 0; // The current page number
   totalPages: number = 0; // Total pages available from the API
   totalEarnings: number = 0;
@@ -45,11 +40,7 @@ export class ReportsComponent {
     this.getEarningsAndCommission();
   }
 
-  constructor(
-    private api: HttpService,
-    private notify: NotificationService,
-    private loaderService: LoaderService
-  ) {
+  constructor(private api: HttpService, private loaderService: LoaderService) {
     this.isLoading = true;
   }
   getTransactions(pageIndex: number, pageSize: number) {

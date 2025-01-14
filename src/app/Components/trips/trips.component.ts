@@ -37,7 +37,7 @@ export class TripsComponent {
 
   tripdata: tripInterface[] = [];
   totalItems: number = 0; // Total number of trips from the server
-  pageSize: number = 10; // Number of trips per page
+  pageSize: number = 5; // Number of trips per page
   currentPage: number = 0; // The current page number
   totalPages: number = 0; // Total pages available from the API
 
